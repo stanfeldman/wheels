@@ -42,25 +42,4 @@ Object-oriented web framework on node.js.
 	exports.Controller1 = Controller1;
 	</pre>
 * view.html
-	<pre>
-	<html>
-		<head>
-		<meta charset="UTF-8"/>
-		</head>
-		<body>
-		<h1>Hello from kiss.js</h1>
-		<h2>{{foo}}</h2>
-		    <ul>
-		        {% for name in names %}
-		        <li>{{name}}</li>
-		        {% end %}
-		    </ul>
-		    <h2>some strings</h2>
-		    <ul>
-		        {% for num in numbers %}
-		        <li>{{num}}</li>
-		        {% end %}
-		    </ul>
-		</body>
-	</html>
-	</pre>
+	Use django-like template tags. See examples.
