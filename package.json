@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Web framework for node.js. Simple and sexy.",
   "keywords": ["web", "framework"],
-  "repository": "git://github.com/stanislavfeldman/mootools.js.git",
+  "repository": "git://github.com/stanislavfeldman/kiss.js.git",
   "author": "Stanislav Feldman <stanislavfeldman@gmail.com>",
   "dependencies": 
   {
