@@ -9,4 +9,4 @@ var mapping =
     "/(\\d+).(\\d+)/?$": controllers.Controller2
 };
 var app = new kiss.core.Application(mapping);
-app.start();
+app.start("127.0.0.1", 1337);

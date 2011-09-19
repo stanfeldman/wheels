@@ -21,7 +21,7 @@ var Controller2 = new Class
 	
 	get: function(req, res)
 	{
-		console.log(req.url);
+		//console.log(req.url);
 		res.writeHead(200, {'Content-Type': 'text/html'});
 		res.end("view2");
 	}
