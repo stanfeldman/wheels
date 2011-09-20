@@ -31,7 +31,7 @@ var Controller2 = new Class
 		pdf.write(filename, function()
 		{
 			var v = new kiss.views.FileView(path.join(__dirname, filename));
-			v.render(res);
+			v.render(res, {filename: "out.pdf"});
 			fs.unlink(path.join(__dirname, filename));
 		});
 	}
