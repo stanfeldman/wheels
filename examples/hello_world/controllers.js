@@ -1,5 +1,9 @@
 require("mootools.js").apply(GLOBAL);
 var kiss = require("kiss.js");
+var Pdf = require("pdfkit");
+var path = require('path');
+var uuid = require('node-uuid');
+var fs = require("fs");
 
 var Controller1 = new Class
 ({
@@ -10,7 +14,7 @@ var Controller1 = new Class
 		var context = { foo: "bar", names: ["Stas", "Boris"], numbers: [] };
 		for(var i = 0; i < 10; ++i)
 		    context.numbers.push("bla bla " + i);
-		var v = new kiss.views.View(__dirname + "/view1.html");
+		var v = new kiss.views.TextView(path.join(__dirname, "view1.html"));
 		v.render(res, context);
 	}
 });
@@ -21,9 +25,15 @@ var Controller2 = new Class
 	
 	get: function(req, res)
 	{
-		//console.log(req.url);
-		res.writeHead(200, {'Content-Type': 'text/html'});
-		res.end("view2");
+		var pdf = new Pdf();
+		var filename = uuid() + ".pdf";
+		pdf.text("hello, world!\nlalala345");
+		pdf.write(filename, function()
+		{
+			var v = new kiss.views.FileView(path.join(__dirname, filename));
+			v.render(res);
+			fs.unlink(path.join(__dirname, filename));
+		});
 	}
 });
 

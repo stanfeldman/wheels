@@ -8,7 +8,8 @@
   "dependencies": 
   {
     "mootools.js": "latest",
-    "node-t": "latest"
+    "node-t": "latest",
+    "mime": "latest"
   },
   "main": "index",
   "engines": 
