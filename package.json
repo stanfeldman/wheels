@@ -9,7 +9,9 @@
   {
     "mootools.js": "latest",
     "node-t": "latest",
-    "mime": "latest"
+    "mime": "latest",
+    "mongodb": "latest",
+    "mysql": "latest"
   },
   "main": "index",
   "engines": 
