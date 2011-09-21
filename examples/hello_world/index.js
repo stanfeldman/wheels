@@ -14,8 +14,8 @@ var options =
 	},
 	db:
 	{
-		engine: "pywy.models.mongodb.MongodbAdapter", 
-		host: "127.0.0.1", 
+		adapter: kiss.models.adapters.MongodbAdapter, 
+		host: "127.0.0.1",
 		port: 27017, 
 		name: "test_db", 
 		user: "root", 
