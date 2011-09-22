@@ -4,8 +4,11 @@ var controllers = require("./controllers");
 
 var options =
 {
-	address: "127.0.0.1",
-	port: 1337,
+	application:
+	{
+		address: "127.0.0.1",
+		port: 1337,
+	},
 	controllers:
 	{
 		"/$": controllers.Controller1,
@@ -21,7 +24,13 @@ var options =
 	},
 	eventer:
 	{
-		"before_request": function(){ console.log("before_request!"); }
+		"before_request": function(event, params, args)
+		{ 
+			console.log("event: " + event);
+			console.log("params: " + params);
+			console.log("args: " + args);
+			console.log("method: " + args[0].method);
+		}
 	}
 };
 var app = new kiss.core.Application(options);
