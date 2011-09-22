@@ -1,20 +1,19 @@
-<html>
-    <head>
-	<meta charset="UTF-8"/>
-    </head>
-    <body>
-	<h1>Hello from kiss.js</h1>
-	<h2>{{foo}}</h2>
-        <ul>
-            {% for name in names %}
-            <li>{{name}}</li>
-            {% end %}
-        </ul>
-        <h2>some strings</h2>
-        <ul>
-            {% for num in numbers %}
-            <li>{{num}}</li>
-            {% end %}
-        </ul>
-    </body>
-</html>
+{% extends "base.html" %}
+This is content from view1, you should not see it
+
+{% block one %}
+<p>This is the "view1.html" content in block 'one'</p>
+<h2>{{foo}}</h2>
+<ul>
+	{% for name in names %}
+	<li>{{name}}</li>
+	{% end %}
+</ul>
+<h2>some strings</h2>
+<ul>
+	{% for num in numbers %}
+    <li>{{num}}</li>
+    {% end %}
+</ul>
+{% end %}
+

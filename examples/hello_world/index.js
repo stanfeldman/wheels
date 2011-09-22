@@ -1,6 +1,7 @@
 require.paths.push('/usr/lib/node_modules');
 var kiss = require("kiss.js");
 var controllers = require("./controllers");
+var path = require('path');
 
 var options =
 {
@@ -16,6 +17,10 @@ var options =
 		"/(\\d+).(\\d+)/?$": controllers.MyController.view2,
 		"before_action": controllers.MyController.on_before_action,
 		"not_found": controllers.MyController.on_not_found
+	},
+	views:
+	{
+		template_path: __dirname
 	},
 	models:
 	{
