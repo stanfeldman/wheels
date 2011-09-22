@@ -9,11 +9,13 @@ var options =
 		address: "127.0.0.1",
 		port: 1337,
 	},
-	controllers:
+	events:
 	{
-		"/$": controllers.Controller1,
-		"/2/?$": controllers.Controller2,
-		"/(\\d+).(\\d+)/?$": controllers.Controller2
+		"/$": controllers.MyController.index,
+		"/2/?$": controllers.MyController.view2,
+		"/(\\d+).(\\d+)/?$": controllers.MyController.view2,
+		"before_action": controllers.MyController.on_before_action,
+		"not_found": controllers.MyController.on_not_found
 	},
 	models:
 	{
@@ -21,16 +23,6 @@ var options =
 		host: "127.0.0.1",
 		port: 27017, 
 		name: "test"
-	},
-	eventer:
-	{
-		"before_request": function(event, params, args)
-		{ 
-			console.log("event: " + event);
-			console.log("params: " + params);
-			console.log("args: " + args);
-			console.log("method: " + args[0].method);
-		}
 	}
 };
 var app = new kiss.core.Application(options);

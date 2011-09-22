@@ -1,6 +1,6 @@
 {
   "name": "kiss.js",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Web framework for node.js. Simple and sexy.",
   "keywords": ["web", "framework"],
   "repository": "git://github.com/stanislavfeldman/kiss.js.git",
