@@ -8,7 +8,7 @@
   "dependencies": 
   {
     "mootools.js": "latest",
-    "node-t": "latest",
+    "dust": "latest",
     "mime": "latest",
     "mongodb": "latest",
     "mysql": "latest"

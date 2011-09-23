@@ -4,6 +4,8 @@ var Pdf = require("pdfkit");
 var path = require('path');
 var uuid = require('node-uuid');
 var fs = require("fs");
+var jqtpl = require("jqtpl");
+var dust = require('dust');
 
 exports.MyController = {};
 
@@ -11,15 +13,13 @@ exports.MyController.index = function(params, args)
 {
 	var req = args[0], res = args[1];
 	var translator = new kiss.views.Translator();
-	console.log(translator.translate(req, "hello"));
-	console.log(translator.translate(req, 'hello, {0}', "Стас"));
+	//console.log(translator.translate(req, "hello"));
+	//console.log(translator.translate(req, 'hello, {0}', "Стас"));
 	var context = { foo: 'hello', names: ["Stas", "Boris"], numbers: [] };
-	for(var i = 0; i < 100; ++i)
+	for(var i = 0; i < 10000; ++i)
 	    context.numbers.push("bla bla " + i);
-	//console.time("node-t");
-	var v = new kiss.views.TextView("view1.html");
+	var v = new kiss.views.TextView("view1");
 	v.render(req, res, context);
-	//console.timeEnd("node-t");
 }
 
 exports.MyController.view2 = function(params, args)
