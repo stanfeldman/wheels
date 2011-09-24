@@ -20,7 +20,7 @@ var options =
 	},
 	views:
 	{
-		template_path: __dirname
+		template_path: "./templates/"
 	},
 	models:
 	{

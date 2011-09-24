@@ -45,5 +45,5 @@ exports.MyController.on_not_found = function(params, args)
 {
 	var req = args[0], res = args[1];
 	res.writeHead(200, {'Content-Type': 'text/html'});
-	res.end("404");
+	res.end("custom 404");
 }
