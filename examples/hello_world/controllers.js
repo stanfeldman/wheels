@@ -14,8 +14,8 @@ exports.MyController.index = function(params, args)
 	//console.log(translator.translate(req, "hello"));
 	//console.log(translator.translate(req, 'hello, {0}', "Стас"));
 	var context = { template_name: "view1", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: function() { return "Bob"; } };
-	for(var i = 0; i < 10000; ++i)
-	    context.numbers.push("bla bla " + i);
+	//for(var i = 0; i < 10000; ++i)
+	//    context.numbers.push("bla bla " + i);
 	var v = new kiss.views.TextViewer();
 	v.render(req, res, context);
 }
