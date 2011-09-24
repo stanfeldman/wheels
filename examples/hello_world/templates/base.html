@@ -1,6 +1,26 @@
 <html>
     <head>
-		<meta charset="UTF-8"/>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
+        <title>kiss.js example</title>
+        <link rel="stylesheet" href="/css/jquery.mobile.css" />  
+        <style>
+        	body { background: #CCC;}
+        </style>
+        <script type="text/javascript" src="/js/jquery.js"></script> 
+		<script type="text/javascript"> 
+		    $(document).bind("mobileinit", function(){
+		        $.extend($.mobile, {
+		            loadingMessage: "Загрузка...",
+		            pageLoadErrorMessage: "Страница не найдена =("
+		        });
+		    $.mobile.page.prototype.options.backBtnText = "Назад";
+		    $.mobile.listview.prototype.options.filterPlaceholder = "Найти...";
+			$.mobile.selectmenu.prototype.options.nativeMenu = false;  
+			$.mobile.page.prototype.options.degradeInputs.date = 'text';              
+		    });
+		</script> 
+		<script type="text/javascript" src="/js/jquery.mobile.js"></script>
 		{+head/}
     </head>
     <body>

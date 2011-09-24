@@ -5,11 +5,6 @@ var path = require('path');
 
 var options =
 {
-	application:
-	{
-		address: "127.0.0.1",
-		port: 1337,
-	},
 	events:
 	{
 		"/$": controllers.MyController.index,
@@ -17,10 +12,6 @@ var options =
 		"/(\\d+).(\\d+)/?$": controllers.MyController.view2,
 		"before_action": controllers.MyController.on_before_action,
 		"not_found": controllers.MyController.on_not_found
-	},
-	views:
-	{
-		template_path: "./templates/"
 	},
 	models:
 	{
