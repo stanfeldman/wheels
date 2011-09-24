@@ -4,21 +4,19 @@ var Pdf = require("pdfkit");
 var path = require('path');
 var uuid = require('node-uuid');
 var fs = require("fs");
-var jqtpl = require("jqtpl");
-var dust = require('dust');
 
 exports.MyController = {};
 
 exports.MyController.index = function(params, args)
 {
 	var req = args[0], res = args[1];
-	var translator = new kiss.views.Translator();
+	//var translator = new kiss.views.Translator();
 	//console.log(translator.translate(req, "hello"));
 	//console.log(translator.translate(req, 'hello, {0}', "Стас"));
-	var context = { foo: 'hello', names: ["Stas", "Boris"], numbers: [] };
+	var context = { template_name: "view1", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: function() { return "Bob"; } };
 	for(var i = 0; i < 10000; ++i)
 	    context.numbers.push("bla bla " + i);
-	var v = new kiss.views.TextView("view1");
+	var v = new kiss.views.TextViewer();
 	v.render(req, res, context);
 }
 
