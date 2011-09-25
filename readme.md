@@ -12,27 +12,25 @@ Object-oriented web framework on node.js.
 
 * index.js
 	<pre>
+	require.paths.push('/usr/lib/node_modules');
 	var kiss = require("kiss.js");
 	var controllers = require("./controllers");
-	
+	var path = require('path');
+
 	var options =
 	{
-		application:
-		{
-			address: "127.0.0.1",
-			port: 1337,
-		},
 		events:
 		{
 			"/$": controllers.MyController.index,
 			"/2/?$": controllers.MyController.view2,
 			"/(\\d+).(\\d+)/?$": controllers.MyController.view2,
 			"before_action": controllers.MyController.on_before_action,
+			"after_action": controllers.MyController.on_after_action,
 			"not_found": controllers.MyController.on_not_found
 		},
 		models:
 		{
-			//adapter: kiss.models.adapters.MongodbAdapter, 
+			adapter: kiss.models.adapters.MongodbAdapter, 
 			host: "127.0.0.1",
 			port: 27017, 
 			name: "test"
@@ -55,10 +53,13 @@ Object-oriented web framework on node.js.
 	exports.MyController.index = function(params, args)
 	{
 		var req = args[0], res = args[1];
-		var context = { foo: "bar", names: ["Stas", "Boris"], numbers: [] };
+		//var translator = new kiss.views.Translator();
+		//console.log(translator.translate(req, "hello"));
+		//console.log(translator.translate(req, 'hello, {0}', "Стас"));
+		var context = { template_name: "view1", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: function() { return "Bob"; } };
 		for(var i = 0; i < 10; ++i)
 			context.numbers.push("bla bla " + i);
-		var v = new kiss.views.TextView(path.join(__dirname, "view1.html"));
+		var v = new kiss.views.TextViewer();
 		v.render(req, res, context);
 	}
 
@@ -78,16 +79,19 @@ Object-oriented web framework on node.js.
 
 	exports.MyController.on_before_action = function(params, args)
 	{
-		console.log("params: " + params);
-		console.log("args: " + args);
-		console.log("method: " + args[0].method);
+		console.time("view rendering time");
+	}
+
+	exports.MyController.on_after_action = function(params, args)
+	{
+		console.timeEnd("view rendering time");
 	}
 
 	exports.MyController.on_not_found = function(params, args)
 	{
 		var req = args[0], res = args[1];
-		res.writeHead(200, {'Content-Type': 'text/html'});
-		res.end("404");
+		res.writeHead(404, {'Content-Type': 'text/html'});
+		res.end("custom 404");
 	}
 	</pre>
 * view.html
