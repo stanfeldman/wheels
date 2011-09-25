@@ -14,8 +14,8 @@ exports.MyController.index = function(params, args)
 	//console.log(translator.translate(req, "hello"));
 	//console.log(translator.translate(req, 'hello, {0}', "Стас"));
 	var context = { template_name: "view1", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: function() { return "Bob"; } };
-	//for(var i = 0; i < 10000; ++i)
-	//    context.numbers.push("bla bla " + i);
+	for(var i = 0; i < 10; ++i)
+	    context.numbers.push("bla bla " + i);
 	var v = new kiss.views.TextViewer();
 	v.render(req, res, context);
 }
@@ -36,14 +36,17 @@ exports.MyController.view2 = function(params, args)
 
 exports.MyController.on_before_action = function(params, args)
 {
-	//console.log("params: " + params);
-	//console.log("args: " + args);
-	//console.log("method: " + args[0].method);
+	console.time("view rendering time");
+}
+
+exports.MyController.on_after_action = function(params, args)
+{
+	console.timeEnd("view rendering time");
 }
 
 exports.MyController.on_not_found = function(params, args)
 {
 	var req = args[0], res = args[1];
-	res.writeHead(200, {'Content-Type': 'text/html'});
+	res.writeHead(404, {'Content-Type': 'text/html'});
 	res.end("custom 404");
 }

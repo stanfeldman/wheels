@@ -11,6 +11,7 @@ var options =
 		"/2/?$": controllers.MyController.view2,
 		"/(\\d+).(\\d+)/?$": controllers.MyController.view2,
 		"before_action": controllers.MyController.on_before_action,
+		"after_action": controllers.MyController.on_after_action,
 		"not_found": controllers.MyController.on_not_found
 	},
 	models:

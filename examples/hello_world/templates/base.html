@@ -1,35 +1,29 @@
 <html>
     <head>
 		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
         <title>kiss.js example</title>
-        <link rel="stylesheet" href="/css/jquery.mobile.css" />  
-        <style>
-        	body { background: #CCC;}
-        </style>
-        <script type="text/javascript" src="/js/jquery.js"></script> 
-		<script type="text/javascript"> 
-		    $(document).bind("mobileinit", function(){
-		        $.extend($.mobile, {
-		            loadingMessage: "Загрузка...",
-		            pageLoadErrorMessage: "Страница не найдена =("
-		        });
-		    $.mobile.page.prototype.options.backBtnText = "Назад";
-		    $.mobile.listview.prototype.options.filterPlaceholder = "Найти...";
-			$.mobile.selectmenu.prototype.options.nativeMenu = false;  
-			$.mobile.page.prototype.options.degradeInputs.date = 'text';              
-		    });
-		</script> 
-		<script type="text/javascript" src="/js/jquery.mobile.js"></script>
 		{+head/}
     </head>
     <body>
-		{+one}
-		  This is the default content in block 'one'
-		{/one}
-
-		{+two}
-		  This is the default content in block 'two'
-		{/two}
+    	<div style="height: 100%">
+    		<div id="header">
+				<h1>kiss.js example - {+header}{/header}</h1>
+				{+header_buttons}{/header_buttons}
+			</div>
+			<div id="content">
+				{+content}{/content}
+			</div>
+			<div id="footer">
+				<table>
+					<tr>
+						<td>
+							&nbsp;&nbsp;
+						</td>
+						<td style="width: 100%; text-align: center;">made with kiss.js</td>
+						<td>{+footer_buttons}{/footer_buttons}</td>
+					</tr>
+				</table>
+			</div>
+    	</div>
     </body>
 </html>
