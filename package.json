@@ -12,7 +12,11 @@
     "dust": "latest",
     "mime": "latest",
     "mongodb": "latest",
-    "mysql": "latest"
+    "mysql": "latest",
+    "findit": "latest",
+    "html-minifier": "latest",
+    "uglify-js": "latest",
+    "sqwish": "latest"
   },
   "main": "index",
   "engines": 
