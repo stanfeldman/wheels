@@ -14,11 +14,17 @@
     "mongodb": "latest",
     "mysql": "latest",
     "findit": "latest",
+    "jake": "latest",
     "html-minifier": "latest",
     "uglify-js": "latest",
-    "sqwish": "latest"
+    "sqwish": "latest",
+    "commander": "latest"
   },
   "main": "index",
+  "bin": 
+  {
+  	"kiss": "./bin/kiss.js"
+  },
   "engines": 
   { 
     "node": ">= 0.4.1" 

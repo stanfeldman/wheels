@@ -10,9 +10,9 @@ exports.MyController = {};
 exports.MyController.index = function(params, args)
 {
 	var req = args[0], res = args[1];
-	//var translator = new kiss.views.Translator();
-	//console.log(translator.translate(req, "hello"));
-	//console.log(translator.translate(req, 'hello, {0}', "Стас"));
+	var translator = new kiss.views.Translator();
+	console.log(translator.translate(req, "hello"));
+	console.log(translator.translate(req, 'hello, {0}', "Стас"));
 	var context = { template_name: "templates/view1.html", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: function() { return "Bob"; } };
 	for(var i = 0; i < 10; ++i)
 	    context.numbers.push("bla bla " + i);
