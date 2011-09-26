@@ -18,7 +18,8 @@
     "html-minifier": "latest",
     "uglify-js": "latest",
     "sqwish": "latest",
-    "commander": "latest"
+    "commander": "latest",
+    "wrench": "latest"
   },
   "main": "index",
   "bin": 
