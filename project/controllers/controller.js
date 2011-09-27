@@ -2,6 +2,8 @@ require("mootools.js").apply(GLOBAL);
 var kiss = require("kiss.js");
 var path = require('path');
 var fs = require("fs");
+var Pdf = require("pdfkit");
+var uuid = require('node-uuid');
 
 exports.index = function(params, args)
 {
@@ -14,6 +16,21 @@ exports.index = function(params, args)
 	    context.numbers.push("bla bla " + i);
 	var v = new kiss.views.TextViewer();
 	v.render(req, res, context);
+}
+
+//Pdf file example
+exports.fileview = function(params, args)
+{
+	var req = args[0], res = args[1];
+	var pdf = new Pdf();
+	var filename = uuid() + ".pdf";
+	pdf.text("hello, world!\nlalala345");
+	pdf.write(filename, function()
+	{
+		var v = new kiss.views.FileView(path.join(__dirname, filename));
+		v.render(req, res, {filename: "out.pdf"});
+		fs.unlink(path.join(__dirname, filename));
+	});
 }
 
 exports.on_not_found = function(params, args)
