@@ -24,12 +24,14 @@ exports.fileview = function(params, args)
 	var req = args[0], res = args[1];
 	var pdf = new Pdf();
 	var filename = uuid() + ".pdf";
+	var filepath = path.join(__dirname, filename);
+	console.log(filepath);
 	pdf.text("hello, world!\nlalala345");
-	pdf.write(filename, function()
+	pdf.write(filepath, function()
 	{
-		var v = new kiss.views.FileView(path.join(__dirname, filename));
+		var v = new kiss.views.FileView(filepath);
 		v.render(req, res, {filename: "out.pdf"});
-		fs.unlink(path.join(__dirname, filename));
+		fs.unlink(filepath);
 	});
 }
 

@@ -7,6 +7,7 @@
   "author": "Stanislav Feldman <stanislavfeldman@gmail.com>",
   "dependencies": 
   {
+  	"coffee-script": "latest",
     "mootools.js": "latest",
     "paperboy": "latest",
     "dust": "latest",

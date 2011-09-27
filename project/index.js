@@ -7,6 +7,7 @@ var options =
 	events:
 	{
 		"/$": controller.index,
+		"/2$": controller.fileview,
 		"not_found": controller.on_not_found
 	}
 };
