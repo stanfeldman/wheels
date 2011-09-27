@@ -9,9 +9,12 @@ path = require 'path'
 paperboy = require 'paperboy'
 
 class Application
-	_instance: undefined
-	
-	@options =
+	@instance: undefined
+
+	constructor: (options) ->
+		if Application.instance isnt undefined
+			return Application.instance
+		@options =
 			application:
 				address: "127.0.0.1",
 				port: 1337,
@@ -27,34 +30,28 @@ class Application
 				host: "127.0.0.1",
 				port: 27017,
 				name: "test"
-
-	constructor: (options) ->
-		if _instance isnt undefined
-			return _instance
-		_instance = this
-		console.log "constr app"
-		Application.options = coffeescript.helpers.merge Application.options, options
-		console.log Application.options.events
-		@eventer = new Eventer()
-		@text_viewer = new views.TextViewer()
+		@options = coffeescript.helpers.merge @options, options
+		console.log "enter constr"
 		#@translator = new views.Translator()
 		#new models.Manager()
+		Application.instance = this
 	
 	start: ->
 		if @started
 			return
+		@eventer = new Eventer()
+		@text_viewer = new views.TextViewer()
 		on_request = (req, res) =>
 			@route req, res
 		server = http.createServer on_request
-		server.listen Application.options.application.port, Application.options.application.address
+		server.listen @options.application.port, @options.application.address
 		@started = true
-		console.log "Server started on http://" + Application.options.application.address + ":" + Application.options.application.port + "/"
+		console.log "Server started on http://" + @options.application.address + ":" + @options.application.port + "/"
 		
 	route: (req, res) ->
 		#find_action: (req, res) =>
 		page_url = url.parse req.url
 		req.url = page_url
-		console.log "loading " + req.url
 		@eventer.emit "before_action", req, res
 		@eventer.emit page_url.pathname, req, res
 		#if @options.application.mode is "debug"
@@ -63,17 +60,18 @@ class Application
 
 #Existing events: "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"
 class Eventer
-	_instance: undefined
+	@instance: undefined
 	
 	constructor: ->
-		if _instance isnt undefined
-			return _instance
-		_instance = this
+		if Eventer.instance isnt undefined
+			return Eventer.instance
+		@app = new Application()
+		Eventer.instance = this
 		
 	emit: (event) ->
 		args = Array.prototype.slice.call arguments, 1
 		found = false
-		for regex, handler of Application.options.events
+		for regex, handler of @app.options.events
 			re = new RegExp regex, "ig"
 			params = re.exec(event)
 			if params
