@@ -25,7 +25,6 @@ exports.fileview = function(params, args)
 	var pdf = new Pdf();
 	var filename = uuid() + ".pdf";
 	var filepath = path.join(__dirname, filename);
-	console.log(filepath);
 	pdf.text("hello, world!\nlalala345");
 	pdf.write(filepath, function()
 	{

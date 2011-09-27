@@ -1,12 +1,8 @@
-coffeescript = require "coffee-script"
 http = require 'http'
 controllers = require "./controllers"
 models = require "./models"
 views = require "./views"
 events = require "events"
-url = require "url"
-path = require 'path'
-paperboy = require 'paperboy'
 
 class Application
 	@instance: undefined
@@ -30,33 +26,25 @@ class Application
 				host: "127.0.0.1",
 				port: 27017,
 				name: "test"
-		@options = coffeescript.helpers.merge @options, options
-		console.log "enter constr"
-		#@translator = new views.Translator()
-		#new models.Manager()
+		require("mootools.js").apply(GLOBAL);
+		@options = Object.merge @options, options
+		console.log @options
 		Application.instance = this
 	
 	start: ->
 		if @started
 			return
 		@eventer = new Eventer()
+		@router = new controllers.Router()
 		@text_viewer = new views.TextViewer()
+		@translator = new views.Translator()
+		#new models.Manager()
 		on_request = (req, res) =>
-			@route req, res
+			@router.route req, res
 		server = http.createServer on_request
 		server.listen @options.application.port, @options.application.address
 		@started = true
 		console.log "Server started on http://" + @options.application.address + ":" + @options.application.port + "/"
-		
-	route: (req, res) ->
-		#find_action: (req, res) =>
-		page_url = url.parse req.url
-		req.url = page_url
-		@eventer.emit "before_action", req, res
-		@eventer.emit page_url.pathname, req, res
-		#if @options.application.mode is "debug"
-		#	(paperboy.deliver path.normalize @options.views.static_path, req, res).otherwise find_action
-		#else find_action()
 
 #Existing events: "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"
 class Eventer
@@ -79,7 +67,7 @@ class Eventer
 				found = true
 				handler params, args
 		if not found and not ["not_found", "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"].contains event
-			@emit "not_found", args...
+			@emit "on_before_not_found", args...
 
 exports.Application = Application
 exports.Eventer = Eventer

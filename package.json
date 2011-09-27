@@ -9,7 +9,6 @@
   {
   	"coffee-script": "latest",
     "mootools.js": "latest",
-    "paperboy": "latest",
     "dust": "latest",
     "mime": "latest",
     "mongodb": "latest",
