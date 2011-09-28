@@ -12,8 +12,6 @@ Object-oriented web framework on node.js written in CoffeeScript.
 # Usage
 
 * Create project(it is just good files structure, you can configure it via application options) <pre>kiss new path/to/new/project</pre>
-
-(in CoffeeScript)
 * index.js
 	<pre>
 	kiss = require "kiss.js"
