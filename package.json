@@ -1,8 +1,8 @@
 {
   "name": "kiss.js",
-  "version": "0.3.0",
-  "description": "Web framework for node.js. Simple and sexy.",
-  "keywords": ["web", "framework"],
+  "version": "0.4.0",
+  "description": "Web framework for node.js in CoffeeScript. Simple and sexy.",
+  "keywords": ["web", "framework", "coffeescript"],
   "repository": "git://github.com/stanislavfeldman/kiss.js.git",
   "author": "Stanislav Feldman <stanislavfeldman@gmail.com>",
   "dependencies": 

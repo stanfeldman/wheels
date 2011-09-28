@@ -1,98 +1,73 @@
-# Web framework for node.js. Simple and sexy.
+# Web framework for node.js in CoffeeScript. Simple and sexy.
 
-Object-oriented web framework on node.js.
+Object-oriented web framework on node.js written in CoffeeScript.
 
 # Installation
 
 * Get npm (http://npmjs.org)
 * run <pre>npm install kiss.js</pre>
+* (optionaly) If you want write project in CoffeeScript <pre>npm install coffee-script</pre>
 * Done
 
 # Usage
 
+* Create project(it is just good files structure, you can configure it via application options) <pre>kiss new path/to/new/project</pre>
+
+(in CoffeeScript)
 * index.js
 	<pre>
-	require.paths.push('/usr/lib/node_modules');
-	var kiss = require("kiss.js");
-	var controllers = require("./controllers");
-	var path = require('path');
+	kiss = require "kiss.js"
+	controllers = require "../controllers/controllers"
 
-	var options =
-	{
+	options =
 		events:
-		{
 			"/$": controllers.MyController.index,
-			"/2/?$": controllers.MyController.view2,
-			"/(\\d+).(\\d+)/?$": controllers.MyController.view2,
-			"before_action": controllers.MyController.on_before_action,
-			"after_action": controllers.MyController.on_after_action,
+			"/2$": controllers.MyController.fileview,
 			"not_found": controllers.MyController.on_not_found
-		},
-		models:
-		{
-			adapter: kiss.models.adapters.MongodbAdapter, 
-			host: "127.0.0.1",
-			port: 27017, 
-			name: "test"
-		}
-	};
-	var app = new kiss.core.Application(options);
-	app.start();
+	app = new kiss.core.Application(options)
+	app.start()
 	</pre>
 * controllers.js
 	<pre>
-	require("mootools.js").apply(GLOBAL);
-	var kiss = require("kiss.js");
-	var Pdf = require("pdfkit");
-	var path = require('path');
-	var uuid = require('node-uuid');
-	var fs = require("fs");
+	kiss = require "kiss.js"
+	path = require 'path'
+	fs = require "fs"
+	Pdf = require "pdfkit"
+	uuid = require 'node-uuid'
 
-	exports.MyController = {};
+	class MyController
+		@index = (params, args) ->
+			req = args[0] 
+			res = args[1]
+			translator = new kiss.views.Translator()
+			console.log translator.translate req, "hello"
+			console.log translator.translate req, 'hello, {0}', "Стас"
+			context = { template_name: "view.html", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: -> "Bob " + "Marley"  }
+			for i in [0..10]
+				context.numbers.push "bla bla " + i
+			v = new kiss.views.TextViewer()
+			v.render req, res, context
 
-	exports.MyController.index = function(params, args)
-	{
-		var req = args[0], res = args[1];
-		//var translator = new kiss.views.Translator();
-		//console.log(translator.translate(req, "hello"));
-		//console.log(translator.translate(req, 'hello, {0}', "Стас"));
-		var context = { template_name: "view1", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: function() { return "Bob"; } };
-		for(var i = 0; i < 10; ++i)
-			context.numbers.push("bla bla " + i);
-		var v = new kiss.views.TextViewer();
-		v.render(req, res, context);
-	}
+		#Pdf file example
+		@fileview = (params, args) ->
+			req = args[0]
+			res = args[1]
+			pdf = new Pdf()
+			filename = uuid() + ".pdf"
+			filepath = path.join __dirname, filename
+			pdf.text "hello, world!\nlalala345"
+			pdf.write filepath, ->
+				v = new kiss.views.FileView(filepath)
+				v.render req, res, {filename: "out.pdf"}
+				fs.unlink(filepath)
 
-	exports.MyController.view2 = function(params, args)
-	{
-		var req = args[0], res = args[1];
-		var pdf = new Pdf();
-		var filename = uuid() + ".pdf";
-		pdf.text("hello, world!\nlalala345");
-		pdf.write(filename, function()
-		{
-			var v = new kiss.views.FileView(path.join(__dirname, filename));
-			v.render(req, res, {filename: "out.pdf"});
-			fs.unlink(path.join(__dirname, filename));
-		});
-	}
+		@on_not_found = (params, args) ->
+			req = args[0]
+			res = args[1]
+			res.writeHead 404, {'Content-Type': 'text/html'}
+			res.end "custom 404"
 
-	exports.MyController.on_before_action = function(params, args)
-	{
-		console.time("view rendering time");
-	}
-
-	exports.MyController.on_after_action = function(params, args)
-	{
-		console.timeEnd("view rendering time");
-	}
-
-	exports.MyController.on_not_found = function(params, args)
-	{
-		var req = args[0], res = args[1];
-		res.writeHead(404, {'Content-Type': 'text/html'});
-		res.end("custom 404");
-	}
+	exports.MyController = MyController
 	</pre>
 * view.html
-	Use django-like template tags. See examples.
+	Now I use dust templates. See project folder.
