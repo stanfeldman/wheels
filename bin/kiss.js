@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 var program = require("commander"),
+	sys = require("sys"),
 	fs = require("fs"),
 	wrench = require('wrench'),
 	findit = require('findit'),
@@ -7,7 +8,8 @@ var program = require("commander"),
 	path = require("path"),
 	sqwish = require('sqwish'),
 	uglify = require("uglify-js"),
-	html_minifier = require("html-minifier");
+	html_minifier = require("html-minifier"),
+	child_process = require('child_process');
 var html_minifier_options =
 {
 	removeComments: true,
@@ -30,6 +32,7 @@ program
 	.version(package_info.version)
 	.option("new, --new", "create new project")
 	.option("build, --build", "build project")
+	.option("test, --test", "test kiss.js")
 	.parse(process.argv);
 if(program.new)
 {
@@ -38,6 +41,14 @@ if(program.new)
 	wrench.copyDirRecursive("./project", project_path, function(err, result)
 	{
 		console.log("ok!");
+	});
+}
+else if(program.test)
+{
+	var test_path = __dirname  + "/../test/*";
+	child_process.exec("vows " + test_path  + " --spec", function (error, stdout, stderr)
+	{
+		sys.puts(stdout);
 	});
 }
 else if(program.build)
