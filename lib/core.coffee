@@ -28,7 +28,6 @@ class Application
 				name: "test"
 		require("mootools.js").apply(GLOBAL);
 		@options = Object.merge @options, options
-		console.log @options
 		Application.instance = this
 	
 	start: ->

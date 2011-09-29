@@ -7,7 +7,6 @@ class Router
 	constructor: ->
 		if Router.instance isnt undefined
 			return Router.instance
-		@app = new core.Application()
 		@eventer = new core.Eventer()
 		Router.instance = this
 	
