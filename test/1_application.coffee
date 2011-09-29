@@ -2,9 +2,9 @@ vows = require "vows"
 assert = require "assert"
 core = require "../lib/core"
 
-test = vows.describe "Core"
+test = vows.describe "Application class"
 test.addBatch
-	"Application class":
+	"":
 		topic: -> 
 			options =
 				events:

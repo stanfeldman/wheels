@@ -2,9 +2,9 @@ vows = require "vows"
 assert = require "assert"
 controllers = require "../lib/controllers"
 
-test = vows.describe "Controllers"
+test = vows.describe "Router class"
 test.addBatch
-	"Router class":
+	"":
 		topic: ->
 			new controllers.Router()
 		"when we create the second instance":
