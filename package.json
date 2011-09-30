@@ -1,6 +1,6 @@
 {
   "name": "kiss.js",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Web framework for node.js in CoffeeScript. Simple and sexy.",
   "keywords": ["web", "framework", "coffeescript"],
   "repository": "git://github.com/stanislavfeldman/kiss.js.git",
@@ -15,7 +15,6 @@
     "mongodb": "latest",
     "mysql": "latest",
     "findit": "latest",
-    "jake": "latest",
     "html-minifier": "latest",
     "uglify-js": "latest",
     "sqwish": "latest",
