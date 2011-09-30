@@ -17,7 +17,6 @@ class TextViewer
 			filepath = path.normalize file
 			data = fs.readFileSync filepath, 'utf-8'
 			tname = filepath.substring (path.normalize @template_path).length
-			console.log tname
 			compiled = TemplateEngine.compile data, tname
 			TemplateEngine.loadSource compiled
 		TextViewer.instance = this

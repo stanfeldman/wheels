@@ -22,9 +22,10 @@ class Application
 				static_path: "./views/static/",
 				locale_path: "./views/locales/"
 			models:
-				#adapter: kiss.models.adapters.MongodbAdapter, 
-				host: "127.0.0.1",
-				port: 27017,
+				classes: []
+				#adapter: kiss.models.adapters.MongodbAdapter
+				host: "127.0.0.1"
+				port: 27017
 				name: "test"
 		require("mootools.js").apply(GLOBAL);
 		@options = Object.merge @options, options
@@ -37,7 +38,7 @@ class Application
 		@router = new controllers.Router()
 		@text_viewer = new views.TextViewer()
 		@translator = new views.Translator()
-		#new models.Manager()
+		@db_manager = new models.Manager()
 		on_request = (req, res) =>
 			@router.route req, res
 		server = http.createServer on_request

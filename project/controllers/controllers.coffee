@@ -8,9 +8,9 @@ class MyController
 	@index = (params, args) ->
 		req = args[0] 
 		res = args[1]
-		translator = new kiss.views.Translator()
-		console.log translator.translate req, "hello"
-		console.log translator.translate req, 'hello, {0}', "Стас"
+		#translator = new kiss.views.Translator()
+		#console.log translator.translate req, "hello"
+		#console.log translator.translate req, 'hello, {0}', "Стас"
 		context = { template_name: "view.html", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: -> "Bob " + "Marley"  }
 		for i in [0..10]
 			context.numbers.push "bla bla " + i
