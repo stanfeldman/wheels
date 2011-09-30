@@ -26,7 +26,10 @@ else if program.test
 	console.log "testing kiss..."
 	test_path = __dirname  + "/../test/*"
 	child_process.exec "vows " + test_path  + " --spec", (error, stdout, stderr) ->
-		console.log stdout
+		result = stdout
+		if stderr
+			result = stderr
+		console.log result
 		console.log "done."
 else if program.build
 	console.log "build project!"

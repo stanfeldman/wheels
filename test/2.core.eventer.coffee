@@ -2,7 +2,7 @@ vows = require "vows"
 assert = require "assert"
 core = require "../lib/core"
 
-test = vows.describe "Eventer class"
+test = vows.describe "core.Eventer"
 test.addBatch
 	"":
 		topic: -> new core.Eventer()

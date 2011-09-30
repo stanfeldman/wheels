@@ -2,7 +2,7 @@ vows = require "vows"
 assert = require "assert"
 views = require "../lib/views"
 
-test = vows.describe "TextViewer class"
+test = vows.describe "views.TextViewer"
 test.addBatch
 	"":
 		topic: ->

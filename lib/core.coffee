@@ -1,6 +1,7 @@
 http = require 'http'
 controllers = require "./controllers"
 models = require "./models"
+adapters = require "./adapters"
 views = require "./views"
 events = require "events"
 
@@ -23,7 +24,7 @@ class Application
 				locale_path: "./views/locales/"
 			models:
 				classes: []
-				#adapter: kiss.models.adapters.MongodbAdapter
+				adapter: adapters.MongodbAdapter
 				host: "127.0.0.1"
 				port: 27017
 				name: "test"

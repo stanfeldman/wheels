@@ -2,7 +2,7 @@ vows = require "vows"
 assert = require "assert"
 core = require "../lib/core"
 
-test = vows.describe "Application class"
+test = vows.describe "core.Application"
 test.addBatch
 	"":
 		topic: -> 

@@ -2,7 +2,7 @@ vows = require "vows"
 assert = require "assert"
 controllers = require "../lib/controllers"
 
-test = vows.describe "Router class"
+test = vows.describe "controllers.Router"
 test.addBatch
 	"":
 		topic: ->
