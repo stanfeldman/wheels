@@ -2,3 +2,27 @@ h2
 {
 	color: green;
 }
+
+.myclass 
+{ 
+	width: 1 + 1;
+	.bordered;
+}
+
+.bordered 
+{
+	border-top: dotted 1px black;
+	border-bottom: solid 2px black;
+}
+
+.border-radius (@radius) 
+{
+	border-radius: @radius;
+	-moz-border-radius: @radius;
+	-webkit-border-radius: @radius;
+}
+
+.button 
+{
+	.border-radius(6px); 
+}

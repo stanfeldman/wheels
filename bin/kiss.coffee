@@ -5,9 +5,8 @@ wrench = require 'wrench'
 findit = require 'findit',
 mime = require "mime"
 path = require "path"
-sqwish = require 'sqwish'
+less = require 'less'
 uglify = require "uglify-js"
-html_minifier = require "html-minifier"
 child_process = require 'child_process'
 
 package_info = JSON.parse fs.readFileSync __dirname + "/../package.json", 'utf-8'
@@ -32,14 +31,13 @@ else if program.test
 		console.log result
 		console.log "done."
 else if program.build
-	console.log "build project!"
+	console.log "building project..."
 	project_path = process.argv[3]
 	wrench.copyDirRecursive project_path, project_path + "/../build", (err, result) ->
 		wrench.copyDirSyncRecursive project_path + "/../build", project_path + "/build"
 		wrench.rmdirSyncRecursive project_path + "/../build"
 		out_css = ""
 		out_js = ""
-		out_html = ""
 		finder = findit.find path.normalize project_path + "/build/views"
 		finder.on 'file', (file) ->
 			filepath = path.normalize file
@@ -49,15 +47,16 @@ else if program.build
 					out_css += fs.readFileSync filepath, 'utf-8'
 				when "application/javascript"
 					out_js += fs.readFileSync filepath, 'utf-8'
-				when "text/html"
-					out_html += fs.readFileSync filepath, 'utf-8'
-		finder.on 'end', -> 
-			out_css = sqwish.minify out_css, true
-			console.log out_css
+		finder.on 'end', ->
+			less_parser = new(less.Parser)
+			less_parser.parse out_css, (e, tree) ->
+				out_css = tree.toCSS({ compress: true })
+				console.log out_css
 			ast = uglify.parser.parse out_js
 			ast = uglify.uglify.ast_mangle ast
 			ast = uglify.uglify.ast_squeeze ast
 			out_js = uglify.uglify.gen_code ast
 			console.log out_js
+			console.log "done."
 else
 	console.log program.helpInformation()

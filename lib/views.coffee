@@ -1,5 +1,5 @@
 core = require "./core"
-TemplateEngine = require 'dust'
+dust = require 'dust'
 path = require 'path'
 mime = require 'mime'
 fs = require "fs"
@@ -17,12 +17,12 @@ class TextViewer
 			filepath = path.normalize file
 			data = fs.readFileSync filepath, 'utf-8'
 			tname = filepath.substring (path.normalize @template_path).length
-			compiled = TemplateEngine.compile data, tname
-			TemplateEngine.loadSource compiled
+			compiled = dust.compile data, tname
+			dust.loadSource compiled
 		TextViewer.instance = this
 	
 	render: (req, res, context) ->
-		TemplateEngine.render context.template_name, context, (err, out) =>
+		dust.render context.template_name, context, (err, out) =>
 			res.writeHead 200, {'Content-Type': 'text/html'}
 			res.end out
 			new core.Eventer().emit "after_action", req, res
