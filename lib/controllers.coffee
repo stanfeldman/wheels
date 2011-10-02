@@ -14,6 +14,12 @@ class Router
 		@app = new core.Application()
 		@eventer = new core.Eventer()
 		Router.instance = this
+		
+	route_static: (res, filepath, type) ->
+		fs.readFile filepath, 'utf-8', (err, data) ->
+			if data
+				res.writeHead 200, {'Content-Type': type}
+				res.end data, 'utf-8'
 	
 	route: (req, res) ->
 		page_url = url.parse req.url
@@ -23,21 +29,8 @@ class Router
 			mimetype = mime.lookup pathname
 			filepath = path.join @app.options.views.static_path, pathname
 			switch mimetype
-				when "text/css"
-					fs.readFile filepath, 'utf-8', (err, data) ->
-						if data
-							res.writeHead 200, {'Content-Type': 'text/css'}
-							res.end data, 'utf-8'
-				when "application/javascript"
-					fs.readFile filepath, 'utf-8', (err, data) ->
-						if data
-							res.writeHead 200, {'Content-Type': 'application/javascript'}
-							res.end data, 'utf-8'
-				when "application/coffeescript"
-					fs.readFile filepath, 'utf-8', (err, data) ->
-						if data
-							res.writeHead 200, {'Content-Type': 'application/javascript'}
-							res.end data, 'utf-8'
+				when "text/css" or "application/javascript" or "application/coffeescript"
+					@route_static res, filepath, mimetype
 				else
 					@eventer.emit "before_action", req, res
 					@eventer.emit page_url.pathname, req, res
