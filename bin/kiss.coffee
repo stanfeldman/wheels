@@ -50,7 +50,7 @@ else if program.build
 			filepath = path.normalize file
 			mimetype = mime.lookup filepath
 			switch mimetype
-				when "text/css" or "text/less"
+				when "text/css"
 					fs.readFile filepath, 'utf-8', (err, data) ->
 						compiler.compile_css data, (css) ->
 							#console.log "css: " + css

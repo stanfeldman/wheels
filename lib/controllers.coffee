@@ -2,6 +2,8 @@ core = require "./core"
 url = require "url"
 mime = require "mime"
 mime.define { 'application/coffeescript': ['coffee'] }
+path = require "path"
+fs = require "fs"
 
 class Router
 	@instance: undefined
@@ -17,10 +19,31 @@ class Router
 		page_url = url.parse req.url
 		req.url = page_url
 		if @app.options.application.mode is "debug"
-			mimetype = mime.lookup page_url.pathname
-			console.log page_url.pathname + ": " + mimetype
-		@eventer.emit "before_action", req, res
-		@eventer.emit page_url.pathname, req, res
+			pathname = page_url.pathname
+			mimetype = mime.lookup pathname
+			filepath = path.join @app.options.views.static_path, pathname
+			switch mimetype
+				when "text/css"
+					fs.readFile filepath, 'utf-8', (err, data) ->
+						if data
+							res.writeHead 200, {'Content-Type': 'text/css'}
+							res.end data, 'utf-8'
+				when "application/javascript"
+					fs.readFile filepath, 'utf-8', (err, data) ->
+						if data
+							res.writeHead 200, {'Content-Type': 'application/javascript'}
+							res.end data, 'utf-8'
+				when "application/coffeescript"
+					fs.readFile filepath, 'utf-8', (err, data) ->
+						if data
+							res.writeHead 200, {'Content-Type': 'application/javascript'}
+							res.end data, 'utf-8'
+				else
+					@eventer.emit "before_action", req, res
+					@eventer.emit page_url.pathname, req, res
+		else
+			@eventer.emit "before_action", req, res
+			@eventer.emit page_url.pathname, req, res
 
 class Controller			
 	@on_not_found: (params, args) ->
