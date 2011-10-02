@@ -1,4 +1,5 @@
 core = require "./core"
+views = require "./views"
 url = require "url"
 mime = require "mime"
 mime.define { 'application/coffeescript': ['coffee'] }
@@ -13,30 +14,43 @@ class Router
 			return Router.instance
 		@app = new core.Application()
 		@eventer = new core.Eventer()
+		@compiler = new views.Compiler()
 		Router.instance = this
 		
-	route_static: (res, filepath, type) ->
-		fs.readFile filepath, 'utf-8', (err, data) ->
+	route_static: (res, filepath, mimetype) ->
+		write_res = (data, mimetype) ->
+			res.writeHead 200, {'Content-Type': mimetype}
+			res.end data, 'utf-8'
+		fs.readFile filepath, 'utf-8', (err, data) =>
 			if data
-				res.writeHead 200, {'Content-Type': type}
-				res.end data, 'utf-8'
+				switch mimetype
+					when "text/css"
+						@compiler.compile_css data, (css) ->
+							write_res css, mimetype
+					when "application/javascript"
+						@compiler.compile_js data, (js) ->
+							write_res js, mimetype
+					when "application/coffeescript"
+						@compiler.compile_coffee data, (cf) ->
+							write_res cf, mimetype
+				
+	route_dynamic: (req, res, page_url) ->
+		@eventer.emit "before_action", req, res
+		@eventer.emit page_url.pathname, req, res
 	
 	route: (req, res) ->
 		page_url = url.parse req.url
 		req.url = page_url
-		if @app.options.application.mode is "debug"
+		if @app.options.application.mode isnt "debug"
+			@route_dynamic req, res, page_url
+		else
 			pathname = page_url.pathname
 			mimetype = mime.lookup pathname
 			filepath = path.join @app.options.views.static_path, pathname
-			switch mimetype
-				when "text/css" or "application/javascript" or "application/coffeescript"
-					@route_static res, filepath, mimetype
-				else
-					@eventer.emit "before_action", req, res
-					@eventer.emit page_url.pathname, req, res
-		else
-			@eventer.emit "before_action", req, res
-			@eventer.emit page_url.pathname, req, res
+			if mimetype not in ["text/css", "application/javascript", "application/coffeescript"]
+				@route_dynamic req, res, page_url
+			else
+				@route_static res, filepath, mimetype
 
 class Controller			
 	@on_not_found: (params, args) ->

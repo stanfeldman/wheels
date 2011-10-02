@@ -53,19 +53,15 @@ else if program.build
 				when "text/css"
 					fs.readFile filepath, 'utf-8', (err, data) ->
 						compiler.compile_css data, (css) ->
-							#console.log "css: " + css
 							fs.writeFile filepath, css, 'utf-8'
 				when "application/javascript"
 					fs.readFile filepath, 'utf-8', (err, data) ->
 						compiler.compile_js data, (js) ->
-							#console.log "js: " + js
 							fs.writeFile filepath, js, 'utf-8'
 				when "application/coffeescript"
 					fs.readFile filepath, 'utf-8', (err, data) ->
 						compiler.compile_coffee data, (cf) ->
-							#console.log "coffee: " + cf
-							fs.writeFile (filepath.substring 0, filepath.length-6) + "js", cf, 'utf-8'
-							fs.unlink filepath
+							fs.writeFile filepath, cf, 'utf-8'
 		finder.on 'end', ->
 			console.log "done."
 else
