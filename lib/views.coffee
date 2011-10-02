@@ -4,6 +4,9 @@ path = require 'path'
 mime = require 'mime'
 fs = require "fs"
 findit = require 'findit'
+less = require 'less'
+uglify = require "uglify-js"
+coffeescript = require "coffee-script"
 
 class TextViewer
 	@instance: undefined
@@ -26,6 +29,30 @@ class TextViewer
 			res.writeHead 200, {'Content-Type': 'text/html'}
 			res.end out
 			new core.Eventer().emit "after_action", req, res
+
+class Compiler
+	@instance: undefined
+	
+	constructor: ->
+		if Compiler.instance isnt undefined
+			return Compiler.instance
+		Compiler.instance = this
+		
+	compile_css: (css, callback) ->
+		less_parser = new(less.Parser)
+		less_parser.parse css, (e, tree) ->
+			callback tree.toCSS({ compress: true })
+			
+	compile_js: (js, callback) ->
+		ast = uglify.parser.parse js
+		ast = uglify.uglify.ast_mangle ast
+		ast = uglify.uglify.ast_squeeze ast
+		callback uglify.uglify.gen_code ast
+		
+	compile_coffee: (coffee, callback) ->
+		cf = coffeescript.compile coffee
+		@compile_js cf, (js) ->
+			callback js
 
 class FileView
 	constructor: (file_path) ->
@@ -100,6 +127,7 @@ class Translator
 		            request.region = regions[0]
 		    return request.language
 
-exports.TextViewer = TextViewer;
-exports.FileView = FileView;
-exports.Translator = Translator;
+exports.TextViewer = TextViewer
+exports.FileView = FileView
+exports.Translator = Translator
+exports.Compiler = Compiler

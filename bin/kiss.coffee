@@ -4,15 +4,13 @@ fs = require "fs"
 wrench = require 'wrench'
 findit = require 'findit',
 mime = require "mime"
-mime.define { 
-	'text/coffeescript': ['coffee']
-	"text/less": ['less'] 
-	}
+mime.define { 'application/coffeescript': ['coffee'] }
 path = require "path"
 less = require 'less'
 uglify = require "uglify-js"
 coffeescript = require "coffee-script"
 child_process = require 'child_process'
+views = require "../lib/views"
 
 package_info = JSON.parse fs.readFileSync __dirname + "/../package.json", 'utf-8'
 program
@@ -38,9 +36,12 @@ else if program.test
 else if program.build
 	console.log "building project..."
 	project_path = process.argv[3]
+	compiler = new views.Compiler()
 	wrench.copyDirRecursive project_path, project_path + "/../build", (err, result) ->
 		wrench.copyDirSyncRecursive project_path + "/../build", project_path + "/build"
 		wrench.rmdirSyncRecursive project_path + "/../build"
+		#remove build/build dir if exists
+		wrench.rmdirSyncRecursive project_path + "/build/build"
 		out_css = ""
 		out_js = ""
 		out_coffee = ""
@@ -48,25 +49,24 @@ else if program.build
 		finder.on 'file', (file) ->
 			filepath = path.normalize file
 			mimetype = mime.lookup filepath
-			console.log mimetype
 			switch mimetype
 				when "text/css" or "text/less"
-					out_css += fs.readFileSync filepath, 'utf-8'
+					fs.readFile filepath, 'utf-8', (err, data) ->
+						compiler.compile_css data, (css) ->
+							#console.log "css: " + css
+							fs.writeFile filepath, css, 'utf-8'
 				when "application/javascript"
-					out_js += fs.readFileSync filepath, 'utf-8'
-				when "text/coffeescript"
-					out_coffee += fs.readFileSync filepath, 'utf-8'
+					fs.readFile filepath, 'utf-8', (err, data) ->
+						compiler.compile_js data, (js) ->
+							#console.log "js: " + js
+							fs.writeFile filepath, js, 'utf-8'
+				when "application/coffeescript"
+					fs.readFile filepath, 'utf-8', (err, data) ->
+						compiler.compile_coffee data, (cf) ->
+							#console.log "coffee: " + cf
+							fs.writeFile (filepath.substring 0, filepath.length-6) + "js", cf, 'utf-8'
+							fs.unlink filepath
 		finder.on 'end', ->
-			less_parser = new(less.Parser)
-			less_parser.parse out_css, (e, tree) ->
-				out_css = tree.toCSS({ compress: true })
-				console.log out_css
-			out_js += coffeescript.compile out_coffee
-			ast = uglify.parser.parse out_js
-			ast = uglify.uglify.ast_mangle ast
-			ast = uglify.uglify.ast_squeeze ast
-			out_js = uglify.uglify.gen_code ast
-			console.log out_js
 			console.log "done."
 else
 	console.log program.helpInformation()
