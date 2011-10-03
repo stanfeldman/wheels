@@ -24,10 +24,7 @@ class Application
 				locale_path: "./views/locales/"
 			models:
 				classes: []
-				adapter: adapters.MongodbAdapter
-				host: "127.0.0.1"
-				port: 27017
-				name: "test"
+				adapter: adapters.MysqlAdapter
 		require("mootools.js").apply(GLOBAL);
 		@options = Object.merge @options, options
 		Application.instance = this

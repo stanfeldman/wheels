@@ -24,8 +24,8 @@ class Manager
 		@app = new core.Application()
 		for model in @app.options.models.classes
 			model extends Model
-		#var AdapterClass = this.options.adapter;
-		#this.adapter = new AdapterClass(this.options);
+		AdapterClass = @app.options.models.adapter;
+		@adapter = new AdapterClass();
 		Manager.instance = this
 	
 	save: (model) ->
@@ -47,6 +47,6 @@ class Adapter
 	remove: (model) ->
 		throw new TypeError "You must override this method"
 
-#exports.Model = Model;
+exports.Model = Model;
 exports.Manager = Manager
 exports.Adapter = Adapter

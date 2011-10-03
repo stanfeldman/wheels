@@ -1,32 +1,11 @@
 models = require "./models"
-mongo = require 'mongodb'
+core = require "./core"
 mysql = require "mysql"
 
-class MongodbAdapter extends models.Adapter
-	constructor: (options) ->
-		@db = new mongo.Db 'test', (new mongo.Server "127.0.0.1", mongo.Connection.DEFAULT_PORT, {}), {}
-	
-	save: (model) ->
-		console.log "save"
-	
-	find: (conditions) ->
-		@db.open (err, db) =>
-			console.log "connected!"
-			@db.collection 'coll1', (err, collection) ->
-				collection.find {}, (err, cursor) ->
-					cursor.toArray (err, items) ->
-						console.log(items);
-	
-	remove: (model) ->
-		console.log "remove"
-
 class MysqlAdapter extends models.Adapter
-	constructor: (options) ->
-		options = 
-			user: "root"
-			password: "vyjujgbdf"
-			database: "nodejs_db"
-		@db = mysql.createClient(options)
+	constructor: () ->
+		@app = new core.Application()
+		@db = mysql.createClient(@app.options.models)
 	
 	save: (model) ->
 		@db.query 'INSERT INTO t1 values (2, "stas")'
@@ -41,5 +20,4 @@ class MysqlAdapter extends models.Adapter
 	remove: (model) ->
 		console.log "remove"
 
-exports.MongodbAdapter = MongodbAdapter
 exports.MysqlAdapter = MysqlAdapter
