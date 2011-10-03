@@ -1,26 +1,19 @@
 #var adapters = require("./adapters");
 core = require "./core"
-###
+
 class Model
-	constructor: (options) ->
+	constructor: ->
 		manager = new Manager()
 	
-	save: function(model)
-	{
-		this.manager.save(this);
-	},
-	
-	remove: function(model)
-	{
-		this.manager.remove(this);
-	}
-});
-Model.find = function(conditions)
-{
-	conditions.model = this;
-	new Manager().find(conditions);
-};
-###
+	save: ->
+		@manager.save this
+		
+	@find: (coditions) ->
+		conditions.model = this
+		new Manager().find conditions
+		
+	remove: ->
+		@manager.remove this
 
 class Manager
 	@instance: undefined
@@ -29,6 +22,8 @@ class Manager
 		if Manager.instance isnt undefined
 			return Manager.instance
 		@app = new core.Application()
+		for model in @app.options.models.classes
+			model extends Model
 		#var AdapterClass = this.options.adapter;
 		#this.adapter = new AdapterClass(this.options);
 		Manager.instance = this
