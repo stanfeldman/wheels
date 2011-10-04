@@ -1,5 +1,4 @@
 #var adapters = require("./adapters");
-core = require "./core"
 
 class Model
 	save: (callback) ->
@@ -15,14 +14,14 @@ class Model
 class Manager
 	@instance: undefined
 	
-	constructor: () ->
+	constructor: (options) ->
 		if Manager.instance isnt undefined
 			return Manager.instance
-		@app = new core.Application()
-		for model in @app.options.models.classes
+		for model in options.classes
 			model extends Model
-		AdapterClass = @app.options.models.adapter;
-		@adapter = new AdapterClass();
+		# Adapter class must implement save(model), remove(model), @find(conditions)
+		AdapterClass = options.adapter;
+		@adapter = new AdapterClass(options);
 		Manager.instance = this
 	
 	save: (model, callback) ->
@@ -34,16 +33,5 @@ class Manager
 	remove: (model) ->
 		@adapter.remove model
 
-class Adapter
-	save: (model) ->
-		throw new TypeError "You must override this method"
-	
-	find: (conditions) ->
-		throw new TypeError "You must override this method"
-	
-	remove: (model) ->
-		throw new TypeError "You must override this method"
-
-exports.Model = Model;
+exports.Model = Model
 exports.Manager = Manager
-exports.Adapter = Adapter

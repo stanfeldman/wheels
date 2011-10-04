@@ -9,10 +9,10 @@ fs = require "fs"
 class Router
 	@instance: undefined
 	
-	constructor: ->
+	constructor: (options) ->
 		if Router.instance isnt undefined
 			return Router.instance
-		@app = new core.Application()
+		@options = options
 		@eventer = new core.Eventer()
 		@compiler = new views.Compiler()
 		Router.instance = this
@@ -41,12 +41,12 @@ class Router
 	route: (req, res) ->
 		page_url = url.parse req.url
 		req.url = page_url
-		if @app.options.application.mode isnt "debug"
+		if @options.application.mode isnt "debug"
 			@route_dynamic req, res, page_url
 		else
 			pathname = page_url.pathname
 			mimetype = mime.lookup pathname
-			filepath = path.join @app.options.views.static_path, pathname
+			filepath = path.join @options.views.static_path, pathname
 			if mimetype not in ["text/css", "application/javascript", "application/coffeescript"]
 				@route_dynamic req, res, page_url
 			else

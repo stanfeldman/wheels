@@ -32,11 +32,11 @@ class Application
 	start: ->
 		if @started
 			return
-		@eventer = new Eventer()
-		@router = new controllers.Router()
-		@text_viewer = new views.TextViewer()
-		@translator = new views.Translator()
-		@db_manager = new models.Manager()
+		@eventer = new Eventer(@options.events)
+		@router = new controllers.Router(@options)
+		@text_viewer = new views.TextViewer(@options.views)
+		@translator = new views.Translator(@options.views)
+		@db_manager = new models.Manager(@options.models)
 		on_request = (req, res) =>
 			@router.route req, res
 		server = http.createServer on_request
@@ -48,16 +48,16 @@ class Application
 class Eventer
 	@instance: undefined
 	
-	constructor: ->
+	constructor: (events) ->
 		if Eventer.instance isnt undefined
 			return Eventer.instance
-		@app = new Application()
+		@events = events
 		Eventer.instance = this
 		
 	emit: (event) ->
 		args = Array.prototype.slice.call arguments, 1
 		found = false
-		for regex, handler of @app.options.events
+		for regex, handler of @events
 			re = new RegExp regex, "ig"
 			params = re.exec(event)
 			if params

@@ -13,7 +13,7 @@ test.addBatch
 		topic: ->				
 			app = new core.Application()
 			app.options.models.classes.push Model1
-			new models.Manager()
+			new models.Manager(app.options.models)
 			return new Model1(5, "lala")
 		"when we try to get model functions save, remove, find":
 			"we get them and they are functions": (topic) ->

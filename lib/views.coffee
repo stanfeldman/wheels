@@ -11,10 +11,10 @@ coffeescript = require "coffee-script"
 class TextViewer
 	@instance: undefined
 	
-	constructor: ->
+	constructor: (options)->
 		if TextViewer.instance isnt undefined
 			return TextViewer.instance
-		@template_path = new core.Application().options.views.template_path;
+		@template_path = options.template_path;
 		finder = findit.find path.normalize @template_path
 		finder.on 'file', (file) =>
 			filepath = path.normalize file
@@ -73,14 +73,13 @@ class FileView
 class Translator
 	@instance: undefined
 	
-	constructor: ->
+	constructor: (options) ->
 		if Translator.instance isnt undefined
 			return Translator.instance
-		@app = new core.Application()
 		@translations = {}
-		@files = fs.readdirSync path.normalize @app.options.views.locale_path
+		@files = fs.readdirSync path.normalize options.locale_path
 		for file in @files
-			data = fs.readFileSync @app.options.views.locale_path+file, 'utf-8'
+			data = fs.readFileSync options.locale_path+file, 'utf-8'
 			#json file with name "<lang>.json"
 			@translations[file.substring 0, file.length-5] = JSON.parse data
 		Translator.instance = this

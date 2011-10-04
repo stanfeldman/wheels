@@ -1,11 +1,8 @@
-models = require "./models"
-core = require "./core"
 mysql = require "mysql"
 
-class MysqlAdapter extends models.Adapter
-	constructor: () ->
-		@app = new core.Application()
-		@db = mysql.createClient(@app.options.models)
+class MysqlAdapter
+	constructor: (options) ->
+		@db = mysql.createClient(options)
 	
 	save: (model, callback) ->
 		#@db.query 'INSERT INTO t1 values (2, "stas")'
