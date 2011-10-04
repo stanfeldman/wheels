@@ -7,8 +7,10 @@ class MysqlAdapter extends models.Adapter
 		@app = new core.Application()
 		@db = mysql.createClient(@app.options.models)
 	
-	save: (model) ->
-		@db.query 'INSERT INTO t1 values (2, "stas")'
+	save: (model, callback) ->
+		#@db.query 'INSERT INTO t1 values (2, "stas")'
+		model.id = 555
+		callback null, model
 	
 	find: (conditions) ->
 		@db.query 'SELECT * FROM t1',

@@ -2,18 +2,15 @@
 core = require "./core"
 
 class Model
-	constructor: ->
-		manager = new Manager()
-	
-	save: ->
-		@manager.save this
+	save: (callback) ->
+		new Manager().save this, callback
 		
 	@find: (coditions) ->
 		conditions.model = this
 		new Manager().find conditions
 		
 	remove: ->
-		@manager.remove this
+		new Manager().remove this
 
 class Manager
 	@instance: undefined
@@ -28,8 +25,8 @@ class Manager
 		@adapter = new AdapterClass();
 		Manager.instance = this
 	
-	save: (model) ->
-		@adapter.save model
+	save: (model, callback) ->
+		@adapter.save model, callback
 	
 	find: (conditions) ->
 		@adapter.find conditions
