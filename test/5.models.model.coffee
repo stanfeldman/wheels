@@ -12,7 +12,13 @@ test.addBatch
 	"":
 		topic: ->				
 			app = new core.Application()
-			app.options.models.classes.push Model1
+			options =
+				classes: [Model1]
+				user: "root"
+				password: "!1ebet2@"
+				database: "kiss_project"
+			require("mootools.js").apply(GLOBAL);
+			app.options.models = Object.merge app.options.models, options
 			new models.Manager(app.options.models)
 			return new Model1(5, "lala")
 		"when we try to get model functions save, remove, find":
@@ -23,6 +29,10 @@ test.addBatch
 		"when we try to save model":
 			"we get model object with id property": (topic) ->
 				topic.save (err, data) ->
+					assert.isNumber data.id
+		"when we find existing object":
+			"we get this object and id is number": (topic) ->
+				Model1.find { id: 1 }, (err, data) ->
 					assert.isNumber data.id
 
 test.export module
