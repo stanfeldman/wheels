@@ -7,19 +7,20 @@ adapters = require "../lib/adapters"
 
 class Model1
 	constructor: (@i, @s) ->
+	
+options =
+	adapter: adapters.MysqlAdapter
+	classes: [Model1]
+	user: "root"
+	password: "!1ebet2@"
+	database: "kiss_project"
+new models.Manager(options)
 
 test = vows.describe "models.Model"
 test.addBatch
 	"":
-		topic: ->				
-			options =
-				adapter: adapters.MysqlAdapter
-				classes: [Model1]
-				user: "root"
-				password: "!1ebet2@"
-				database: "kiss_project"
-			new models.Manager(options)
-			return new Model1(5, "lala")
+		topic: ->
+			new Model1(5, "lala")
 		"when we try to get model functions save, remove, find":
 			"we get them and they are functions": (topic) ->
 				assert.isFunction topic.save

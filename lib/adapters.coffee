@@ -9,8 +9,9 @@ class MysqlAdapter
 				"id int not null auto_increment," +
 				"primary key(id)" +
 				")"
-			@db.query query, (err) ->
-				console.log "Error: + " + err
+			@db.query query, (err) =>
+				err? console.log "Error: " + err
+				@db.end()
 	
 	save: (model, callback) ->
 		#@db.query 'INSERT INTO t1 values (2, "stas")'
