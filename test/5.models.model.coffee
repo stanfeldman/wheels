@@ -3,6 +3,7 @@ assert = require "assert"
 core = require "../lib/core"
 controllers = require "../lib/controllers"
 models = require "../lib/models"
+adapters = require "../lib/adapters"
 
 class Model1
 	constructor: (@i, @s) ->
@@ -11,15 +12,13 @@ test = vows.describe "models.Model"
 test.addBatch
 	"":
 		topic: ->				
-			app = new core.Application()
 			options =
+				adapter: adapters.MysqlAdapter
 				classes: [Model1]
 				user: "root"
 				password: "!1ebet2@"
 				database: "kiss_project"
-			require("mootools.js").apply(GLOBAL);
-			app.options.models = Object.merge app.options.models, options
-			new models.Manager(app.options.models)
+			new models.Manager(options)
 			return new Model1(5, "lala")
 		"when we try to get model functions save, remove, find":
 			"we get them and they are functions": (topic) ->
