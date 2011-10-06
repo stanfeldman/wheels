@@ -6,7 +6,6 @@ class MysqlAdapter
 		for obj in options.objects
 			fields = ""
 			for key, value of obj
-				console.log key + ": " + value + "/" + value.constructor.name
 				fields += key + " "
 				switch value.constructor.name
 					when "String"
@@ -26,11 +25,19 @@ class MysqlAdapter
 				@db.end()
 	
 	save: (model, callback) ->
-		#for key, value of model
-		#	console.log key + ": " + value
-		#@db.query 'INSERT INTO t1 values (2, "stas")'
-		model.id = 555
-		callback null, model
+		table = model.constructor.name
+		fields = ""
+		for key, value of model 
+			if value.constructor.name in ["String", "Number"]
+				fields += key + " = '" + value + "',"
+		fields = fields.substring 0, fields.length-1
+		query = "insert into " + table + " set " + fields
+		console.log query
+		@db.query query, (err) =>
+			err? console.log "Error: " + err
+			@db.end()
+			model.id = 555
+			callback null, model
 	
 	find: (conditions, callback) ->
 	###
