@@ -23,7 +23,7 @@ class Application
 				static_path: "./views/static/",
 				locale_path: "./views/locales/"
 			models:
-				classes: []
+				objects: []
 				adapter: adapters.MysqlAdapter
 		require("mootools.js").apply(GLOBAL);
 		@options = Object.merge @options, options

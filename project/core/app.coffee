@@ -8,7 +8,7 @@ options =
 		"/2$": controllers.MyController.fileview,
 		"not_found": controllers.MyController.on_not_found
 	models:
-		classes: [models.MyModel]
+		objects: [new models.MyModel(56, "some str")]
 		user: "root"
 		password: "!1ebet2@"
 		database: "kiss_project"

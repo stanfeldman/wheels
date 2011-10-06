@@ -10,7 +10,7 @@ class Model1
 	
 options =
 	adapter: adapters.MysqlAdapter
-	classes: [Model1]
+	objects: [new Model1(5, "woeij")]
 	user: "root"
 	password: "!1ebet2@"
 	database: "kiss_project"

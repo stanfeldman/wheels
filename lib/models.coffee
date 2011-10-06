@@ -15,8 +15,8 @@ class Manager
 	constructor: (options) ->
 		if Manager.instance isnt undefined
 			return Manager.instance
-		for model in options.classes
-			model extends Model
+		for obj in options.objects
+			obj.constructor extends Model
 		AdapterClass = options.adapter
 		@adapter = new AdapterClass(options)
 		# Adapter class must implement save(model), remove(model), @find(conditions)
