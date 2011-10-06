@@ -4,11 +4,21 @@ class MysqlAdapter
 	constructor: (options) ->
 		@db = mysql.createClient(options)
 		for obj in options.objects
+			fields = ""
 			for key, value of obj
-				console.log key + ": " + value + "/" + typeof value
-			tablename = obj.constructor.name
-			query = "create table if not exists " + tablename + " (" +
+				console.log key + ": " + value + "/" + value.constructor.name
+				fields += key + " "
+				switch value.constructor.name
+					when "String"
+						fields += "varchar(250),"
+					when "Number"
+						if /\./.test value
+							fields += "float,"
+						else fields += "int,"
+			table = obj.constructor.name
+			query = "create table if not exists " + table + " (" +
 				"id int not null auto_increment," +
+				fields +
 				"primary key(id)" +
 				")"
 			@db.query query, (err) =>
