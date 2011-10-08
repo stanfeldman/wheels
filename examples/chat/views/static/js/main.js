@@ -1,9 +1,11 @@
 $(document).ready(function()
 {
 	now.name = "user";
+	now.room = "room 1";
 	function send()
 	{
 		now.name = $("#username").val();
+		now.new_room = $("#room").val();
 		now.distributeMessage($("#text-input").val());
 		$("#text-input").val("");
 	}
