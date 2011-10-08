@@ -5,7 +5,7 @@ class MyController
 	@on_app_started = (app) ->
 		app.rpc_channel.now.distributeMessage = (message) ->
 			gr = rpc.getGroup @now.room
-			gr.now.receiveMessage @now.name, message
+			gr.now.receiveMessage @now.name, escape message
 		rpc.on "connect", ->
 			@now.room = "room 1"
 			rpc_group = rpc.getGroup @now.room
