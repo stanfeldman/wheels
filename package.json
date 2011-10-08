@@ -18,7 +18,7 @@
     "commander": "latest",
     "wrench": "latest",
     "mysql": "latest",
-    "socket.io": "latest"
+    "now": "latest"
   },
   "main": "index",
   "bin": 

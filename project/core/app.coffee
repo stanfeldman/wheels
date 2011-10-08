@@ -5,7 +5,6 @@ models = require "../models/models"
 options =
 	events:
 		"/$": controllers.MyController.index,
-		"/2$": controllers.MyController.fileview,
 		"not_found": controllers.MyController.on_not_found
 	models:
 		objects: [new models.MyModel(56, "some str")]

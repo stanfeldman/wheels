@@ -1,5 +1,5 @@
 http = require 'http'
-socket_io = require "socket.io"
+rpc = require "now"
 controllers = require "./controllers"
 models = require "./models"
 adapters = require "./adapters"
@@ -40,9 +40,9 @@ class Application
 		@db_manager = new models.Manager(@options.models)
 		on_request = (req, res) =>
 			@router.route req, res
-		server = http.createServer on_request
-		server.listen @options.application.port, @options.application.address
-		socket_io = socket_io.listen(server, {"log level" : 0})
+		@server = http.createServer on_request
+		@server.listen @options.application.port, @options.application.address
+		@rpc_channel = rpc.initialize(@server, {"log level" : 0})
 		@started = true
 		console.log "Application started on http://" + @options.application.address + ":" + @options.application.port + "/"
 
@@ -66,7 +66,7 @@ class Eventer
 				found = true
 				handler args..., params...
 		if not found and not ["before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"].contains event
-			@emit "on_not_found", args...
+			@emit "not_found", args...
 
 exports.Application = Application
 exports.Eventer = Eventer

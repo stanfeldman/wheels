@@ -17,7 +17,7 @@ class Router
 		@compiler = new views.Compiler()
 		Router.instance = this
 		
-	route_static: (res, filepath, mimetype) ->
+	route_static: (req, res, filepath, mimetype) ->
 		write_res = (data, mimetype) ->
 			res.writeHead 200, {'Content-Type': mimetype}
 			res.end data, 'utf-8'
@@ -33,6 +33,8 @@ class Router
 					when "application/coffeescript"
 						@compiler.compile_coffee data, (cf) ->
 							write_res cf, mimetype
+			else
+				@eventer.emit "not_found", req, res
 				
 	route_dynamic: (req, res, page_url) ->
 		@eventer.emit "before_action", req, res
@@ -50,7 +52,7 @@ class Router
 			if mimetype not in ["text/css", "application/javascript", "application/coffeescript"]
 				@route_dynamic req, res, page_url
 			else
-				@route_static res, filepath, mimetype
+				@route_static req, res, filepath, mimetype
 
 class Controller			
 	@on_not_found: (req, res) ->

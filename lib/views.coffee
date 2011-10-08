@@ -14,7 +14,9 @@ class TextViewer
 	constructor: (options)->
 		if TextViewer.instance isnt undefined
 			return TextViewer.instance
-		@template_path = options.template_path;
+		@template_path = options.template_path
+		unless path.existsSync @template_path
+			return
 		finder = findit.find path.normalize @template_path
 		finder.on 'file', (file) =>
 			filepath = path.normalize file
@@ -76,6 +78,8 @@ class Translator
 	constructor: (options) ->
 		if Translator.instance isnt undefined
 			return Translator.instance
+		unless path.existsSync options.locale_path
+			return
 		@translations = {}
 		@files = fs.readdirSync path.normalize options.locale_path
 		for file in @files
