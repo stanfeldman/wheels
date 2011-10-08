@@ -1,13 +1,16 @@
 class Model
 	save: (callback) ->
-		new Manager().save this, callback
+		if Manager.instance
+			new Manager().save this, callback
 		
 	@find: (conditions, callback) ->
-		conditions.model = this
-		new Manager().find conditions, callback
+		if Manager.instance
+			conditions.model = this
+			new Manager().find conditions, callback
 		
 	remove: ->
-		new Manager().remove this
+		if Manager.instance
+			new Manager().remove this
 
 class Manager
 	@instance: undefined

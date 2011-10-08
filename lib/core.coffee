@@ -1,4 +1,5 @@
 http = require 'http'
+socket_io = require "socket.io"
 controllers = require "./controllers"
 models = require "./models"
 adapters = require "./adapters"
@@ -41,8 +42,9 @@ class Application
 			@router.route req, res
 		server = http.createServer on_request
 		server.listen @options.application.port, @options.application.address
+		socket_io = socket_io.listen(server, {"log level" : 0})
 		@started = true
-		console.log "Server started on http://" + @options.application.address + ":" + @options.application.port + "/"
+		console.log "Application started on http://" + @options.application.address + ":" + @options.application.port + "/"
 
 #Existing events: "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"
 class Eventer
@@ -54,18 +56,17 @@ class Eventer
 		@events = events
 		Eventer.instance = this
 		
-	emit: (event) ->
-		args = Array.prototype.slice.call arguments, 1
+	emit: (event, args...) ->
 		found = false
 		for regex, handler of @events
 			re = new RegExp regex, "ig"
 			params = re.exec(event)
 			if params
-				params = params.splice 1, params.length-1
+				params = params[1 .. params.length-1]
 				found = true
-				handler params, args
-		if not found and not ["not_found", "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"].contains event
-			@emit "on_before_not_found", args...
+				handler args..., params...
+		if not found and not ["before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"].contains event
+			@emit "on_not_found", args...
 
 exports.Application = Application
 exports.Eventer = Eventer

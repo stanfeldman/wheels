@@ -5,9 +5,9 @@ Pdf = require "pdfkit"
 uuid = require 'node-uuid'
 
 class MyController
-	@index = (params, args) ->
-		req = args[0] 
-		res = args[1]
+	@index = (req, res) ->
+		#req = args[0] 
+		#res = args[1]
 		#translator = new kiss.views.Translator()
 		#console.log translator.translate req, "hello"
 		#console.log translator.translate req, 'hello, {0}', "Стас"
@@ -18,9 +18,7 @@ class MyController
 		v.render req, res, context
 
 	#Pdf file example
-	@fileview = (params, args) ->
-		req = args[0]
-		res = args[1]
+	@fileview = (req, res) ->
 		pdf = new Pdf()
 		filename = uuid() + ".pdf"
 		filepath = path.join __dirname, filename
@@ -30,9 +28,7 @@ class MyController
 			v.render req, res, {filename: "out.pdf"}
 			fs.unlink(filepath)
 
-	@on_not_found = (params, args) ->
-		req = args[0]
-		res = args[1]
+	@on_not_found = (req, res) ->
 		res.writeHead 404, {'Content-Type': 'text/html'}
 		res.end "custom 404"
 

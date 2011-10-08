@@ -53,9 +53,7 @@ class Router
 				@route_static res, filepath, mimetype
 
 class Controller			
-	@on_not_found: (params, args) ->
-		req = args[0]
-		res = args[1]
+	@on_not_found: (req, res) ->
 		res.writeHead 200, {'Content-Type': 'text/html'}
 		res.end "404"
 		
