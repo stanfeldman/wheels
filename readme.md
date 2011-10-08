@@ -20,10 +20,9 @@ Object-oriented web framework on node.js written in CoffeeScript.
 	options =
 		events:
 			"/$": controllers.MyController.index,
-			"/2$": controllers.MyController.fileview,
 			"not_found": controllers.MyController.on_not_found
 		models:
-			classes: [models.MyModel]
+			objects: [new models.MyModel(56, "some str")]
 			user: "root"
 			password: "!1ebet2@"
 			database: "kiss_project"
@@ -33,15 +32,8 @@ Object-oriented web framework on node.js written in CoffeeScript.
 * controllers.js
 	<pre>
 	kiss = require "kiss.js"
-	path = require 'path'
-	fs = require "fs"
-	Pdf = require "pdfkit"
-	uuid = require 'node-uuid'
-
 	class MyController
-		@index = (params, args) ->
-			req = args[0] 
-			res = args[1]
+		@index = (req, res) ->
 			#translator = new kiss.views.Translator()
 			#console.log translator.translate req, "hello"
 			#console.log translator.translate req, 'hello, {0}', "Стас"
@@ -50,27 +42,10 @@ Object-oriented web framework on node.js written in CoffeeScript.
 				context.numbers.push "bla bla " + i
 			v = new kiss.views.TextViewer()
 			v.render req, res, context
-
-		#Pdf file example
-		@fileview = (params, args) ->
-			req = args[0]
-			res = args[1]
-			pdf = new Pdf()
-			filename = uuid() + ".pdf"
-			filepath = path.join __dirname, filename
-			pdf.text "hello, world!\nlalala345"
-			pdf.write filepath, ->
-				v = new kiss.views.FileView(filepath)
-				v.render req, res, {filename: "out.pdf"}
-				fs.unlink(filepath)
-
-		@on_not_found = (params, args) ->
-			req = args[0]
-			res = args[1]
+		@on_not_found = (req, res) ->
 			res.writeHead 404, {'Content-Type': 'text/html'}
 			res.end "custom 404"
-
 	exports.MyController = MyController
 	</pre>
 * view.html
-	Now I use dust templates. See project folder.
+	Kiss.js uses dust templates. See project folder.

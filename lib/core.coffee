@@ -44,9 +44,10 @@ class Application
 		@server.listen @options.application.port, @options.application.address
 		@rpc_channel = rpc.initialize(@server, {"log level" : 0})
 		@started = true
+		@eventer.emit "application_started", this
 		console.log "Application started on http://" + @options.application.address + ":" + @options.application.port + "/"
 
-#Existing events: "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"
+#Existing events: "application_started", "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"
 class Eventer
 	@instance: undefined
 	
@@ -65,7 +66,7 @@ class Eventer
 				params = params[1 .. params.length-1]
 				found = true
 				handler args..., params...
-		if not found and not ["before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"].contains event
+		if not found and not ["application_started", "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"].contains event
 			@emit "not_found", args...
 
 exports.Application = Application
