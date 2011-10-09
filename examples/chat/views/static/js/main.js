@@ -4,10 +4,9 @@ $(document).ready(function()
 	now.room = "room 1";
 	function send()
 	{
-		now.name = $("#username").val();
-		now.new_room = $("#room").val();
-		var html = $("#text-input").val();
-		html = $('<div/>').text(html).html();		
+		now.name = $('<div/>').text($("#username").val()).html();
+		now.new_room = $('<div/>').text($("#room").val()).html();
+		var html = $('<div/>').text($("#text-input").val()).html();		
 		now.distributeMessage(html);
 		$("#text-input").val("");
 	}
