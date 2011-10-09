@@ -6,7 +6,9 @@ $(document).ready(function()
 	{
 		now.name = $("#username").val();
 		now.new_room = $("#room").val();
-		now.distributeMessage($("#text-input").val());
+		var html = $("#text-input").val();
+		html = $('<div/>').text(html).html();		
+		now.distributeMessage(html);
 		$("#text-input").val("");
 	}
 	$("#send-button").click(send);

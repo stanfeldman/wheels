@@ -9,7 +9,7 @@ class MyController
 			gr = rpc.getGroup @now.new_room
 			gr.addUser @user.clientId
 			@now.room = @now.new_room
-			gr.now.receiveMessage @now.name, escape message
+			gr.now.receiveMessage @now.name, message
 		rpc.on "connect", ->
 			rpc_group = rpc.getGroup @now.room
 			rpc_group.addUser @user.clientId
