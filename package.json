@@ -1,6 +1,6 @@
 {
   "name": "kiss.js",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Web framework for node.js in CoffeeScript. Simple and sexy.",
   "keywords": ["web", "framework", "coffeescript"],
   "repository": "git://github.com/stanislavfeldman/kiss.js.git",
@@ -17,7 +17,6 @@
     "less": "latest",
     "commander": "latest",
     "wrench": "latest",
-    "mysql": "latest",
     "now": "latest"
   },
   "main": "index",

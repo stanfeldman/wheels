@@ -1,8 +1,6 @@
 http = require 'http'
 rpc = require "now"
 controllers = require "./controllers"
-models = require "./models"
-adapters = require "./adapters"
 views = require "./views"
 events = require "events"
 
@@ -23,9 +21,6 @@ class Application
 				template_path: "./views/templates/",
 				static_path: "./views/static/",
 				locale_path: "./views/locales/"
-			models:
-				objects: []
-				adapter: adapters.MysqlAdapter
 		require("mootools.js").apply(GLOBAL);
 		@options = Object.merge @options, options
 		Application.instance = this
@@ -37,7 +32,6 @@ class Application
 		@router = new controllers.Router(@options)
 		@text_viewer = new views.TextViewer(@options.views)
 		@translator = new views.Translator(@options.views)
-		@db_manager = new models.Manager(@options.models)
 		on_request = (req, res) =>
 			@router.route req, res
 		@server = http.createServer on_request
