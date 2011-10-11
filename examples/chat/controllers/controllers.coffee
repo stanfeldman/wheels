@@ -2,7 +2,7 @@ kiss = require "kiss.js"
 rpc = kiss.controllers.rpc
 
 class MyController
-	@on_app_started = (app) ->
+	application_started: (app) ->
 		app.rpc_channel.now.distributeMessage = (message) ->
 			gr = rpc.getGroup @now.room
 			gr.removeUser @user.clientId
@@ -15,7 +15,7 @@ class MyController
 			rpc_group.addUser @user.clientId
 			@now.name = @now.name + @user.clientId
 		
-	@index = (req, res) ->
+	get: (req, res) ->
 		context = { template_name: "chat.html"  }
 		v = new kiss.views.TextViewer()
 		v.render req, res, context

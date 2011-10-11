@@ -8,12 +8,14 @@ if args[0]
 	address = args[0]
 if args[1]
 	port = parseInt args[1]
+	
+my_controller = new controllers.MyController()
 options =
 	application:
 		address: address
 		port: port
 	events:
-		"application_started": controllers.MyController.on_app_started
-		"/$": controllers.MyController.index
+		"application_started": my_controller
+		"/$": my_controller
 app = new kiss.core.Application(options)
 app.start()

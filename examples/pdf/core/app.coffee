@@ -13,6 +13,6 @@ options =
 		address: address
 		port: port
 	events:
-		"/$": controllers.MyController.fileview
+		"/$": new controllers.MyController()
 app = new kiss.core.Application(options)
 app.start()

@@ -6,7 +6,7 @@ uuid = require 'node-uuid'
 
 class MyController
 	#Pdf file example
-	@fileview = (req, res) ->
+	get: (req, res) ->
 		pdf = new Pdf()
 		filename = uuid() + ".pdf"
 		filepath = path.join __dirname, filename

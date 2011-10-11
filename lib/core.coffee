@@ -16,7 +16,7 @@ class Application
 				port: 1337,
 				mode: "debug"
 			events:
-				"not_found": controllers.Controller.on_not_found
+				"not_found": new controllers.Controller()
 			views:
 				template_path: "./views/templates/",
 				static_path: "./views/static/",
@@ -59,7 +59,10 @@ class Eventer
 			if params
 				params = params[1 .. params.length-1]
 				found = true
-				handler args..., params...
+				if args[0].method and event isnt "not_found"
+					handler[args[0].method.toLowerCase()] args..., params...
+				else 
+					handler[regex] args..., params...
 		if not found and not ["application_started", "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"].contains event
 			@emit "not_found", args...
 

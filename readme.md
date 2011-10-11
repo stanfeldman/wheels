@@ -16,26 +16,21 @@ Object-oriented web framework on node.js written in CoffeeScript.
 	<pre>
 	kiss = require "kiss.js"
 	controllers = require "../controllers/controllers"
-	models = require "../models/models"
 	args = process.argv.splice 2
 	address = "127.0.0.1"
 	port = 1337
 	if args[0]
 		address = args[0]
 	if args[1]
-		port = parseInt args[1]
+		port = parseInt args[1]	
+	my_controller = new controllers.MyController()
 	options =
 		application:
 			address: address
 			port: port
 		events:
-			"/$": controllers.MyController.index,
-			"not_found": controllers.MyController.on_not_found
-		models:
-			objects: [new models.MyModel(56, "some str")]
-			user: "root"
-			password: "!1ebet2@"
-			database: "kiss_project"
+			"/$": my_controller
+			"not_found": my_controller
 	app = new kiss.core.Application(options)
 	app.start()
 	</pre>
@@ -43,16 +38,13 @@ Object-oriented web framework on node.js written in CoffeeScript.
 	<pre>
 	kiss = require "kiss.js"
 	class MyController
-		@index = (req, res) ->
-			#translator = new kiss.views.Translator()
-			#console.log translator.translate req, "hello"
-			#console.log translator.translate req, 'hello, {0}', "Стас"
+		get: (req, res) ->
 			context = { template_name: "view.html", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: -> "Bob " + "Marley"  }
 			for i in [0..10]
 				context.numbers.push "bla bla " + i
 			v = new kiss.views.TextViewer()
 			v.render req, res, context
-		@on_not_found = (req, res) ->
+		not_found: (req, res) ->
 			res.writeHead 404, {'Content-Type': 'text/html'}
 			res.end "custom 404"
 	exports.MyController = MyController

@@ -1,7 +1,7 @@
 kiss = require "kiss.js"
 
 class MyController
-	@index = (req, res) ->
+	get: (req, res) ->
 		#translator = new kiss.views.Translator()
 		#console.log translator.translate req, "hello"
 		#console.log translator.translate req, 'hello, {0}', "Стас"
@@ -11,7 +11,7 @@ class MyController
 		v = new kiss.views.TextViewer()
 		v.render req, res, context
 
-	@on_not_found = (req, res) ->
+	not_found: (req, res) ->
 		res.writeHead 404, {'Content-Type': 'text/html'}
 		res.end "custom 404"
 
