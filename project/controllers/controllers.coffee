@@ -5,7 +5,9 @@ class MyController
 		#translator = new kiss.views.Translator()
 		#console.log translator.translate req, "hello"
 		#console.log translator.translate req, 'hello, {0}', "Стас"
-		context = { template_name: "view.html", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: -> "Bob " + "Marley"  }
+		req.session.views ?= 0
+		req.session.views++
+		context = { template_name: "view.html", foo: req.session.views, names: ["Stas", "Boris"], numbers: [], name: -> "Bob " + "Marley"  }
 		for i in [0..10]
 			context.numbers.push "bla bla " + i
 		v = new kiss.views.TextViewer()
