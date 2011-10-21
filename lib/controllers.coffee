@@ -37,7 +37,6 @@ class Router
 				@eventer.emit "not_found", req, res
 				
 	route_dynamic: (req, res, page_url) ->
-		@eventer.emit "before_action", req, res
 		@eventer.emit page_url.pathname, req, res
 	
 	route: (req, res) ->

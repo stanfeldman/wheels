@@ -30,7 +30,6 @@ class TextViewer
 		dust.render context.template_name, context, (err, out) =>
 			res.writeHead 200, {'Content-Type': 'text/html'}
 			res.end out
-			new core.Eventer().emit "after_action", req, res
 
 class Compiler
 	@instance: undefined

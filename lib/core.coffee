@@ -36,12 +36,18 @@ class Application
 		@router = new controllers.Router(@options)
 		@text_viewer = new views.TextViewer(@options.views)
 		@translator = new views.Translator(@options.views)
-		on_request = (req, res) =>
+		on_request = (req, res, next) =>
 			@router.route req, res
 		@middleware = connect(
 			connect.cookieParser(),
 			connect.session({ secret: @options.views.cookie_secret }),
-			on_request
+			(req, res, next) =>
+				@eventer.emit "before_action", req, res
+				next()
+			on_request,
+			(req, res, next) =>
+				@eventer.emit "after_action", req, res
+				next()
 		)
 		@server = cluster(@middleware)
 		@server.use cluster.reload process.cwd(), {extensions: ['.js', '.coffee']}
@@ -73,7 +79,7 @@ class Eventer
 			if params
 				params = params[1 .. params.length-1]
 				found = true
-				if args[0].method and event isnt "not_found"
+				if args[0].method and not ["not_found", "application_started", "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"].contains event
 					handler[args[0].method.toLowerCase()] args..., params...
 				else 
 					handler[regex] args..., params...
