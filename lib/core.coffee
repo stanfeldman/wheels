@@ -5,6 +5,7 @@ views = require "./views"
 events = require "events"
 connect = require "connect"
 path = require "path"
+cluster = require "cluster"
 
 class Application
 	@instance: undefined
@@ -37,16 +38,17 @@ class Application
 		@translator = new views.Translator(@options.views)
 		on_request = (req, res) =>
 			@router.route req, res
-		@server = connect(
-			connect.cookieParser(), 
+		@middleware = connect(
+			connect.cookieParser(),
 			connect.session({ secret: @options.views.cookie_secret }),
 			on_request
 		)
+		@server = cluster(@middleware)
+		@server.use cluster.reload process.cwd(), {extensions: ['.js', '.coffee']}
 		@server.listen @options.application.port, @options.application.address
 		@rpc_channel = rpc.initialize(@server, {"log level" : 0})
 		@started = true
 		@eventer.emit "application_started", this
-		console.log "Application started on http://" + @options.application.address + ":" + @options.application.port + "/"
 		
 	stop: ->
 		unless @started

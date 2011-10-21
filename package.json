@@ -18,7 +18,8 @@
     "commander": "latest",
     "wrench": "latest",
     "now": "latest",
-    "connect": "latest"
+    "connect": "latest",
+    "cluster": "latest"
   },
   "main": "index",
   "bin": 
