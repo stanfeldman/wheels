@@ -1,19 +1,10 @@
 kiss = require "kiss.js"
-rpc = kiss.controllers.rpc
 
 class MyController
 	application_started: (app) ->
-		app.rpc_channel.now.distributeMessage = (message) ->
-			gr = rpc.getGroup @now.room
-			gr.removeUser @user.clientId
-			gr = rpc.getGroup @now.new_room
-			gr.addUser @user.clientId
-			@now.room = @now.new_room
-			gr.now.receiveMessage @now.name, message
-		rpc.on "connect", ->
-			rpc_group = rpc.getGroup @now.room
-			rpc_group.addUser @user.clientId
-			@now.name = @now.name + @user.clientId
+		app.socketio.sockets.on 'connection', (socket) ->
+			socket.on "distribute", (data) ->
+				socket.broadcast.emit "receive", data
 		
 	get: (req, res) ->
 		context = { template_name: "chat.html"  }

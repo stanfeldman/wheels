@@ -1,13 +1,19 @@
 $(document).ready(function()
 {
-	now.name = "user";
-	now.room = "room 1";
+	var socket = io.connect(window.location.hostname);
+	function receive(data)
+	{
+		$("<li><h3>" + data.name + "</h3><p><strong>" + data.message + "</strong></p></li>").prependTo("#messages");
+		$('#messages').listview('refresh');
+	}
+	socket.on('receive', receive);
 	function send()
 	{
-		now.name = $('<div/>').text($("#username").val()).html();
-		now.new_room = $('<div/>').text($("#room").val()).html();
-		var html = $('<div/>').text($("#text-input").val()).html();		
-		now.distributeMessage(html);
+		var name = $('<div/>').text($("#username").val()).html();
+		var message = $('<div/>').text($("#text-input").val()).html();
+		var data = { name: name, message: message };
+		socket.emit('distribute', data);
+		receive(data);
 		$("#text-input").val("");
 	}
 	$("#send-button").click(send);
@@ -15,9 +21,4 @@ $(document).ready(function()
 	{
 		if(e.keyCode == 13) send();
 	});
-	now.receiveMessage = function(name, message)
-	{
-		$("<li><h3>" + name + "</h3><p><strong>" + message + "</strong></p></li>").prependTo("#messages");
-		$('#messages').listview('refresh');
-	}
 });

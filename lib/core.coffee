@@ -1,5 +1,5 @@
 http = require 'http'
-rpc = require "now"
+socketio = require "socket.io"
 controllers = require "./controllers"
 views = require "./views"
 events = require "events"
@@ -49,10 +49,9 @@ class Application
 				@eventer.emit "after_action", req, res
 				next()
 		)
-		@server = cluster(@middleware)
-		@server.use cluster.reload process.cwd(), {extensions: ['.js', '.coffee']}
+		@server = @middleware
+		@socketio = socketio.listen @server, {"log level" : 0}
 		@server.listen @options.application.port, @options.application.address
-		@rpc_channel = rpc.initialize(@server, {"log level" : 0})
 		@started = true
 		@eventer.emit "application_started", this
 		

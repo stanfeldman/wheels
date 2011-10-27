@@ -3,7 +3,7 @@
     <head>
     	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
-        <title>Чат с использованием Kiss.js и Now.js, Фельдман Станислав, 2011</title>
+        <title>Чат с использованием Kiss.js и Socket.io, Фельдман Станислав, 2011</title>
         <link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
         <style>
         	body { background: #CCC;}
@@ -21,23 +21,15 @@
 		    });
 		</script> 
 		<script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
-		<script src="/nowjs/now.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
 		<script src="/js/main.js"></script>
     </head>
     <body>
     	<div id="chat_page" data-role="page" data-theme="b" style="height: 100%">
 			<div data-id="header" data-role="header" data-theme="b" data-position="fixed">
-				<h1>Чат с использованием Kiss.js и Now.js, Фельдман Станислав, 2011</h1>
+				<h1>Чат с использованием Kiss.js и Socket.io, Фельдман Станислав, 2011</h1>
 			</div>
 			<div data-role="content">
-				<ul data-role="listview" data-inset="true">
-					<li>
-						<div data-role="fieldcontain"> 
-							<label for="text-input">Комната:</label>
-							<input type="text" id="room" placeholder="Название комнаты чата"/>
-						</div> 
-					</li>
-				</ul>
 				<ul data-role="listview" data-inset="true">
 					<li>
 						<div data-role="fieldcontain"> 
