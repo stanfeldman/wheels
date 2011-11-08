@@ -1,6 +1,6 @@
 # Web framework for node.js in CoffeeScript. Simple and sexy.
 
-Object-oriented web framework on node.js written in CoffeeScript.
+Object-oriented web framework on Node.js, written in CoffeeScript.
 
 # Installation
 

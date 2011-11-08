@@ -5,7 +5,6 @@ views = require "./views"
 events = require "events"
 connect = require "connect"
 path = require "path"
-cluster = require "cluster"
 
 class Application
 	@instance: undefined
