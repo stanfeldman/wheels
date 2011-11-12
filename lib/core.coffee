@@ -20,7 +20,7 @@ class Application
 			events:
 				"not_found": new controllers.Controller()
 			views:
-				template_path: "./views/templates/"
+				template_path: "."
 				static_path: "./views/static/"
 				locale_path: "./views/locales/"
 				cookie_secret: "oweirv020fk"

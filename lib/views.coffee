@@ -1,12 +1,12 @@
 core = require "./core"
-dust = require 'dust'
+dust = require 'dust.js'
 path = require 'path'
 mime = require 'mime'
 fs = require "fs"
 findit = require 'findit'
-less = require 'less'
 uglify = require "uglify-js"
 coffeescript = require "coffee-script"
+mime = require "mime"
 
 class TextViewer
 	@instance: undefined
@@ -15,19 +15,23 @@ class TextViewer
 		if TextViewer.instance isnt undefined
 			return TextViewer.instance
 		@template_path = options.template_path
-		unless path.existsSync @template_path
+		unless @template_path.length > 0
 			return
 		finder = findit.find path.normalize @template_path
 		finder.on 'file', (file) =>
 			filepath = path.normalize file
-			data = fs.readFileSync filepath, 'utf-8'
-			tname = filepath.substring (path.normalize @template_path).length
-			compiled = dust.compile data, tname
-			dust.loadSource compiled
+			if (mime.lookup filepath) is "text/html"
+				data = fs.readFileSync filepath, 'utf-8'
+				compiled = dust.compile data, filepath
+				dust.loadSource compiled
 		TextViewer.instance = this
 	
+	text: (context, callback) ->
+		dust.render context.template_name, context, (err, out) ->
+			callback err, out
+			
 	render: (req, res, context) ->
-		dust.render context.template_name, context, (err, out) =>
+		@text context, (err, out) ->
 			res.writeHead 200, {'Content-Type': 'text/html'}
 			res.end out
 
@@ -38,11 +42,6 @@ class Compiler
 		if Compiler.instance isnt undefined
 			return Compiler.instance
 		Compiler.instance = this
-		
-	compile_css: (css, callback) ->
-		less_parser = new(less.Parser)
-		less_parser.parse css, (e, tree) ->
-			callback tree.toCSS({ compress: true })
 			
 	compile_js: (js, callback) ->
 		ast = uglify.parser.parse js
@@ -55,7 +54,7 @@ class Compiler
 		@compile_js cf, (js) ->
 			callback js
 
-class FileView
+class FileViewer
 	constructor: (file_path) ->
 		@file = file_path
 		@mimetype = mime.lookup this.file
@@ -130,6 +129,6 @@ class Translator
 		    return request.language
 
 exports.TextViewer = TextViewer
-exports.FileView = FileView
+exports.FileViewer = FileViewer
 exports.Translator = Translator
 exports.Compiler = Compiler
