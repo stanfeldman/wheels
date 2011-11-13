@@ -6,7 +6,9 @@ fs = require "fs"
 findit = require 'findit'
 uglify = require "uglify-js"
 coffeescript = require "coffee-script"
+cleancss = require "clean-css"
 mime = require "mime"
+zlib = require "zlib"
 
 class TextViewer
 	@instance: undefined
@@ -32,8 +34,9 @@ class TextViewer
 			
 	render: (req, res, context) ->
 		@text context, (err, out) ->
-			res.writeHead 200, {'Content-Type': 'text/html'}
-			res.end out
+			zlib.gzip out, (e, o) ->
+				res.writeHead 200, {'Content-Type': 'text/html', "Content-Encoding": "gzip"}
+				res.end o
 
 class Compiler
 	@instance: undefined
@@ -47,12 +50,16 @@ class Compiler
 		ast = uglify.parser.parse js
 		ast = uglify.uglify.ast_mangle ast
 		ast = uglify.uglify.ast_squeeze ast
-		callback uglify.uglify.gen_code ast
+		callback uglify.uglify.gen_code null, ast
+		
+	compile_css: (input, callback) ->
+		stylus.render input, (err, res) ->
+			callback err, cleancss.process res
 		
 	compile_coffee: (coffee, callback) ->
 		cf = coffeescript.compile coffee
 		@compile_js cf, (js) ->
-			callback js
+			callback null, js
 
 class FileViewer
 	constructor: (file_path) ->

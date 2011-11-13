@@ -6,7 +6,6 @@ findit = require 'findit',
 mime = require "mime"
 mime.define { 'application/coffeescript': ['coffee'] }
 path = require "path"
-less = require 'less'
 uglify = require "uglify-js"
 coffeescript = require "coffee-script"
 child_process = require 'child_process'
@@ -16,7 +15,7 @@ package_info = JSON.parse fs.readFileSync __dirname + "/../package.json", 'utf-8
 program
 	.version(package_info.version)
 	.option("new, --new", "create new project")
-	.option("build, --build", "build project")
+	#.option("build, --build", "build project")
 	.option("test, --test", "test kiss")
 	.parse(process.argv)
 if program.new
@@ -33,6 +32,7 @@ else if program.test
 			result = stderr
 		console.log result
 		console.log "done."
+###
 else if program.build
 	console.log "building project..."
 	project_path = process.argv[3]
@@ -64,5 +64,6 @@ else if program.build
 							fs.writeFile filepath, cf, 'utf-8'
 		finder.on 'end', ->
 			console.log "done."
+###
 else
 	console.log program.helpInformation()

@@ -25,13 +25,13 @@ class Router
 			if data
 				switch mimetype
 					when "text/css"
-						@compiler.compile_css data, (css) ->
+						@compiler.compile_css data, (err, css) ->
 							write_res css, mimetype
 					when "application/javascript"
-						@compiler.compile_js data, (js) ->
+						@compiler.compile_js data, (err, js) ->
 							write_res js, mimetype
 					when "application/coffeescript"
-						@compiler.compile_coffee data, (cf) ->
+						@compiler.compile_coffee data, (err, cf) ->
 							write_res cf, mimetype
 			else
 				@eventer.emit "not_found", req, res
@@ -42,16 +42,13 @@ class Router
 	route: (req, res) ->
 		page_url = url.parse req.url
 		req.url = page_url
-		if @options.application.mode isnt "debug"
+		pathname = page_url.pathname
+		mimetype = mime.lookup pathname
+		filepath = path.join @options.views.static_path, pathname
+		if mimetype not in ["text/css", "application/javascript", "application/coffeescript"]
 			@route_dynamic req, res, page_url
 		else
-			pathname = page_url.pathname
-			mimetype = mime.lookup pathname
-			filepath = path.join @options.views.static_path, pathname
-			if mimetype not in ["text/css", "application/javascript", "application/coffeescript"]
-				@route_dynamic req, res, page_url
-			else
-				@route_static req, res, filepath, mimetype
+			@route_static req, res, filepath, mimetype
 
 class Controller			
 	not_found: (req, res) ->

@@ -16,7 +16,6 @@ class Application
 			application:
 				address: "127.0.0.1"
 				port: 1337
-				mode: "debug"
 			events:
 				"not_found": new controllers.Controller()
 			views:

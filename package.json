@@ -17,7 +17,9 @@
     "commander": "latest",
     "wrench": "latest",
     "socket.io": "latest",
-    "connect": "latest"
+    "connect": "latest",
+    "stylus": "latest",
+    "clean-css": "latest"
   },
   "main": "index",
   "bin": 
