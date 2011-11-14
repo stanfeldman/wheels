@@ -17,9 +17,10 @@ class MyController
 class Application
 	@instance: undefined
 
-	constructor: (options) ->
+	constructor: (@options) ->
 		if Application.instance isnt undefined
 			return Application.instance
+		###
 		@options =
 			application:
 				address: "127.0.0.1"
@@ -33,17 +34,18 @@ class Application
 				cookie_secret: "oweirv020fk"
 		require("mootools.js").apply(GLOBAL);
 		@options = Object.merge @options, options
+		###
 		Application.instance = this
 	
 	start: ->
 		if @started
 			return
-		@eventer = new Eventer(@options.events)
-		@router = new controllers.Router(@options)
+		#@eventer = new Eventer(@options.events)
+		#@router = new controllers.Router(@options)
 		@text_viewer = new views.TextViewer(@options.views)
 		@translator = new views.Translator(@options.views)
-		on_request = (req, res, next) =>
-			@router.route req, res, next
+		#on_request = (req, res, next) =>
+		#	@router.route req, res, next
 		@server = connect(
 			connect.cookieParser(),
 			connect.session({ secret: @options.views.cookie_secret }),
@@ -64,19 +66,12 @@ class Application
 			#	@eventer.emit "after_action", req, res
 			#	next()
 		)
-		x = {
-			"/c": new MyController(),
-			"/user":{
-            	"/posts": new MyController()
-			}
-		}
-		console.log x
 		console.log @options.urls
 		#@server = @middleware
 		#@socketio = socketio.listen @server, {"log level" : 0}
 		@server.listen @options.application.port, @options.application.address
 		@started = true
-		@eventer.emit "application_started", this
+		#@eventer.emit "application_started", this
 		
 	stop: ->
 		unless @started
@@ -84,6 +79,7 @@ class Application
 		@server.close()
 
 #Existing events: "application_started", "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"
+###
 class Eventer
 	@instance: undefined
 	
@@ -107,6 +103,6 @@ class Eventer
 					handler[regex] args..., params...
 		if not found and not ["application_started", "before_action", "after_action", "before_model_save", "after_model_save", "before_model_remove", "after_model_remove"].contains event
 			@emit "not_found", args...
-
+###
 exports.Application = Application
-exports.Eventer = Eventer
+#exports.Eventer = Eventer

@@ -75,7 +75,7 @@ class FileViewer
 			res.write chunk
 		filestream.on 'end', ->
 			res.end()
-			new core.Eventer().emit "after_action", req, res
+			#new core.Eventer().emit "after_action", req, res
 			
 class Translator
 	@instance: undefined
