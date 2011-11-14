@@ -69,10 +69,8 @@ class Compiler
 			else next()
 							
 	compile: (from, to, next) ->
-		console.log "compiling #{from}"
 		fs.readFile from, 'utf8', (err, str) =>
 			@compile_coffee str, (e, res) ->
-				console.log res
 				fs.writeFile to, res, 'utf8', next
 			
 	compile_js: (js, callback) ->
