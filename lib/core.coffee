@@ -1,10 +1,18 @@
 http = require 'http'
-socketio = require "socket.io"
+#socketio = require "socket.io"
 controllers = require "./controllers"
 views = require "./views"
 events = require "events"
 connect = require "connect"
 path = require "path"
+stylus = require 'stylus'
+quip = require 'quip'
+dispatch = require './dispatch'
+
+class MyController
+	get: (req, res) ->
+		console.log res
+		res.text 'my controller'
 
 class Application
 	@instance: undefined
@@ -35,20 +43,37 @@ class Application
 		@text_viewer = new views.TextViewer(@options.views)
 		@translator = new views.Translator(@options.views)
 		on_request = (req, res, next) =>
-			@router.route req, res
-		@middleware = connect(
+			@router.route req, res, next
+		@server = connect(
 			connect.cookieParser(),
 			connect.session({ secret: @options.views.cookie_secret }),
-			(req, res, next) =>
-				@eventer.emit "before_action", req, res
-				next()
-			on_request,
-			(req, res, next) =>
-				@eventer.emit "after_action", req, res
-				next()
+			#(req, res, next) =>
+			#	@eventer.emit "before_action", req, res
+			#	next()
+			stylus.middleware({
+				src: @options.views.static_path,
+				dest: @options.views.static_path,
+				compress: true
+			}),
+			connect.static(@options.views.static_path),
+			quip(),
+			dispatch(@options.urls)
+			#on_request,
+			#,
+			#(req, res, next) =>
+			#	@eventer.emit "after_action", req, res
+			#	next()
 		)
-		@server = @middleware
-		@socketio = socketio.listen @server, {"log level" : 0}
+		x = {
+			"/c": new MyController(),
+			"/user":{
+            	"/posts": new MyController()
+			}
+		}
+		console.log x
+		console.log @options.urls
+		#@server = @middleware
+		#@socketio = socketio.listen @server, {"log level" : 0}
 		@server.listen @options.application.port, @options.application.address
 		@started = true
 		@eventer.emit "application_started", this

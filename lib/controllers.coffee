@@ -39,7 +39,7 @@ class Router
 	route_dynamic: (req, res, page_url) ->
 		@eventer.emit page_url.pathname, req, res
 	
-	route: (req, res) ->
+	route: (req, res, next) ->
 		page_url = url.parse req.url
 		req.url = page_url
 		pathname = page_url.pathname
@@ -47,8 +47,10 @@ class Router
 		filepath = path.join @options.views.static_path, pathname
 		if mimetype not in ["text/css", "application/javascript", "application/coffeescript"]
 			@route_dynamic req, res, page_url
+			console.log page_url
 		else
-			@route_static req, res, filepath, mimetype
+			next()
+		#	@route_static req, res, filepath, mimetype
 
 class Controller			
 	not_found: (req, res) ->

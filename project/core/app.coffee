@@ -14,6 +14,8 @@ options =
 	application:
 		address: address
 		port: port
+	views:
+		static_path: __dirname + "/../views/static/"
 	events:
 		"/$": my_controller
 		"not_found": my_controller
