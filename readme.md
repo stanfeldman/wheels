@@ -26,28 +26,37 @@ Object-oriented web framework on Node.js, written in CoffeeScript.
 	my_controller = new controllers.MyController()
 	options =
 		application:
-			address: address
-			port: port
-		events:
-			"/$": my_controller
-			"not_found": my_controller
+			address: address || "127.0.0.1"
+			port: port || 1337
+		views:
+			static_path: __dirname + "/../views/static/"
+			template_path: __dirname + "/../"
+			locale_path: __dirname + "/../views/locales/"
+			cookie_secret: "ertyu78f020fk"
+		urls:
+			"/c": my_controller
+			"/user":
+				"/posts": my_controller
 	app = new kiss.core.Application(options)
 	app.start()
 	</pre>
 * controllers.js
 	<pre>
-	kiss = require "kiss.js"
-	class MyController
-		get: (req, res) ->
-			context = { template_name: "view.html", foo: 'hello', names: ["Stas", "Boris"], numbers: [], name: -> "Bob " + "Marley"  }
-			for i in [0..10]
-				context.numbers.push "bla bla " + i
-			v = new kiss.views.TextViewer()
-			v.render req, res, context
-		not_found: (req, res) ->
-			res.writeHead 404, {'Content-Type': 'text/html'}
-			res.end "custom 404"
-	exports.MyController = MyController
+kiss = require "kiss.js"
+class MyController
+	get: (req, res) ->
+		req.session.views ?= 0
+		req.session.views++
+		context = { foo: req.session.views, names: ["Stas", "Boris"], numbers: [], name: -> "Bob " + "Marley"  }
+		for i in [0..10]
+			context.numbers.push "bla bla " + i
+		res.render "view.html", context
+		
+	post: (req, res) ->
+		res.text "hello from post"
+exports.MyController = MyController
 	</pre>
 * view.html
 	Kiss.js uses dust templates. See project folder.
+	Client-side coffee scripts will be compile on the fly.
+	For styling use Stylus, it also compiles on the fly.
