@@ -7,7 +7,6 @@ connect = require "connect"
 path = require "path"
 stylus = require 'stylus'
 quip = require 'quip'
-dispatch = require './dispatch'
 
 class MyController
 	get: (req, res) ->
@@ -41,7 +40,7 @@ class Application
 		if @started
 			return
 		#@eventer = new Eventer(@options.events)
-		#@router = new controllers.Router(@options)
+		@router = new controllers.Router(@options.urls)
 		@text_viewer = new views.TextViewer(@options.views)
 		@translator = new views.Translator(@options.views)
 		#on_request = (req, res, next) =>
@@ -59,14 +58,13 @@ class Application
 			}),
 			connect.static(@options.views.static_path),
 			quip(),
-			dispatch(@options.urls)
+			@router.route()
 			#on_request,
 			#,
 			#(req, res, next) =>
 			#	@eventer.emit "after_action", req, res
 			#	next()
 		)
-		console.log @options.urls
 		#@server = @middleware
 		#@socketio = socketio.listen @server, {"log level" : 0}
 		@server.listen @options.application.port, @options.application.address

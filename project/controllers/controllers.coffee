@@ -12,6 +12,9 @@ class MyController
 			context.numbers.push "bla bla " + i
 		v = new kiss.views.TextViewer()
 		v.render req, res, context
+		
+	post: (req, res) ->
+		res.text "hello from post"
 
 	not_found: (req, res) ->
 		res.writeHead 404, {'Content-Type': 'text/html'}

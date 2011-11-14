@@ -1,61 +1,57 @@
-core = require "./core"
-views = require "./views"
 url = require "url"
-mime = require "mime"
-mime.define { 'application/coffeescript': ['coffee'] }
-path = require "path"
-fs = require "fs"
 
 class Router
 	@instance: undefined
 	
-	constructor: (options) ->
+	constructor: (urls) ->
 		if Router.instance isnt undefined
 			return Router.instance
-		@options = options
-		@eventer = new core.Eventer()
-		@compiler = new views.Compiler()
+		@urls = @compile_keys @flatten_keys urls
 		Router.instance = this
-		
-	route_static: (req, res, filepath, mimetype) ->
-		write_res = (data, mimetype) ->
-			res.writeHead 200, {'Content-Type': mimetype}
-			res.end data, 'utf-8'
-		fs.readFile filepath, 'utf-8', (err, data) =>
-			if data
-				switch mimetype
-					when "text/css"
-						@compiler.compile_css data, (err, css) ->
-							write_res css, mimetype
-					when "application/javascript"
-						@compiler.compile_js data, (err, js) ->
-							write_res js, mimetype
-					when "application/coffeescript"
-						@compiler.compile_coffee data, (err, cf) ->
-							write_res cf, mimetype
-			else
-				@eventer.emit "not_found", req, res
-				
-	route_dynamic: (req, res, page_url) ->
-		@eventer.emit page_url.pathname, req, res
 	
-	route: (req, res, next) ->
-		page_url = url.parse req.url
-		req.url = page_url
-		pathname = page_url.pathname
-		mimetype = mime.lookup pathname
-		filepath = path.join @options.views.static_path, pathname
-		if mimetype not in ["text/css", "application/javascript", "application/coffeescript"]
-			@route_dynamic req, res, page_url
-			console.log page_url
-		else
-			next()
-		#	@route_static req, res, filepath, mimetype
+	route: () ->
+		return (req, res, next) =>
+			is_ok = @urls.some (x) ->
+		        match = x[0].exec url.parse(req.url).pathname
+		        if match
+		            if !x[1] or x[1] is req.method
+		                x[2][req.method.toLowerCase()] req, res, match.slice(1)...
+		                return true
+		        return false
+		    if not is_ok
+		    	next()
 
-class Controller			
-	not_found: (req, res) ->
-		res.writeHead 200, {'Content-Type': 'text/html'}
-		res.end "404"
+	flatten_keys: (obj, acc, prefix, prev_method) ->
+		acc = acc || []
+		prefix = prefix || ''
+		Object.keys(obj).forEach((k) =>
+		    split = @split_url k
+		    if obj[k].constructor.name isnt "Object" and obj[k].constructor.name isnt "Function"
+		        acc.push [prefix + split.url, split.method || prev_method, obj[k]]
+		    else
+		    	@flatten_keys obj[k], acc, prefix + split.url, split.method
+		)
+		return acc
+
+	compile_keys: (urls) ->
+		return urls.map((url) ->
+		    pattern = url[0].replace "\/:\w+", '(?:/([^\/]+))'
+		    url[0] = new RegExp '^' + pattern + '$'
+		    return url
+		)
+		
+	split_url: (url) ->
+		method = path = match = /^([A-Z]+)(?:\s+|$)/.exec url
+		if match
+		    method = match[1]
+		    path = "^[A-Z]+\s+(.*)$".exec url
+		    url = ""
+		    if path
+		    	url = path[1]
+		res =
+			url: url
+			method: method
+		return res
 		
 exports.Router = Router
-exports.Controller = Controller
+
