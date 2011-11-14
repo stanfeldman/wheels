@@ -16,8 +16,8 @@ options =
 		port: port || 1337
 	views:
 		static_path: __dirname + "/../views/static/"
-		template_path: "."
-		locale_path: "./views/locales/"
+		template_path: __dirname + "/../"
+		locale_path: __dirname + "/../views/locales/"
 		cookie_secret: "ertyu78f020fk"
 	urls:
 		"/c": my_controller

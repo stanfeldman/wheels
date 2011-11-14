@@ -6,9 +6,9 @@ fs = require "fs"
 findit = require 'findit'
 uglify = require "uglify-js"
 coffeescript = require "coffee-script"
-cleancss = require "clean-css"
 mime = require "mime"
 zlib = require "zlib"
+url = require "url"
 
 class TextViewer
 	@instance: undefined
@@ -24,42 +24,67 @@ class TextViewer
 			filepath = path.normalize file
 			if (mime.lookup filepath) is "text/html"
 				data = fs.readFileSync filepath, 'utf-8'
-				compiled = dust.compile data, filepath
+				compiled = dust.compile data, path.basename filepath
 				dust.loadSource compiled
 		TextViewer.instance = this
-	
-	text: (context, callback) ->
-		dust.render context.template_name, context, (err, out) ->
-			callback err, out
-			
-	render: (req, res, context) ->
-		@text context, (err, out) ->
-			zlib.gzip out, (e, o) ->
-				res.writeHead 200, {'Content-Type': 'text/html', "Content-Encoding": "gzip"}
-				res.end o
+		
+	middleware: () ->
+		return (req, res, next) =>
+			res.render = (template, context) ->
+				dust.render template, context, (err, out) ->
+					zlib.gzip out, (e, o) ->
+						res.writeHead 200, {'Content-Type': 'text/html', "Content-Encoding": "gzip"}
+						res.end o
+			next()
 
 class Compiler
 	@instance: undefined
 	
-	constructor: ->
+	constructor: (options) ->
 		if Compiler.instance isnt undefined
 			return Compiler.instance
+		@static_path = options.static_path
 		Compiler.instance = this
+		
+	middleware: () ->
+		return (req, res, next) =>
+			if 'GET' isnt req.method
+				return next()
+			p = url.parse(req.url).pathname
+			console.log p
+			if /\.js$/.test(p)
+				comp_path = path.join @static_path, p
+				orig_path = path.join @static_path, p.replace '.js', '.coffee'
+				fs.stat orig_path, (err, orig_path_stats) =>
+					fs.stat comp_path, (e, comp_path_stats) =>
+						if e
+							if 'ENOENT' == e.code
+								@compile(orig_path, comp_path, next)
+							else
+							  next e
+						else
+							if orig_path_stats?.mtime > comp_path_stats?.mtime
+								@compile(orig_path, comp_path, next)
+							else next()
+			else next()
+							
+	compile: (from, to, next) ->
+		console.log "compiling #{from}"
+		fs.readFile from, 'utf8', (err, str) =>
+			@compile_coffee str, (e, res) ->
+				console.log res
+				fs.writeFile to, res, 'utf8', next
 			
 	compile_js: (js, callback) ->
 		ast = uglify.parser.parse js
 		ast = uglify.uglify.ast_mangle ast
 		ast = uglify.uglify.ast_squeeze ast
-		callback uglify.uglify.gen_code null, ast
-		
-	compile_css: (input, callback) ->
-		stylus.render input, (err, res) ->
-			callback err, cleancss.process res
+		callback null, uglify.uglify.gen_code ast
 		
 	compile_coffee: (coffee, callback) ->
 		cf = coffeescript.compile coffee
-		@compile_js cf, (js) ->
-			callback null, js
+		@compile_js cf, (err, js) ->
+			callback err, js
 
 class FileViewer
 	constructor: (file_path) ->

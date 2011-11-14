@@ -42,6 +42,7 @@ class Application
 		#@eventer = new Eventer(@options.events)
 		@router = new controllers.Router(@options.urls)
 		@text_viewer = new views.TextViewer(@options.views)
+		@compiler = new views.Compiler(@options.views)
 		@translator = new views.Translator(@options.views)
 		#on_request = (req, res, next) =>
 		#	@router.route req, res, next
@@ -56,9 +57,11 @@ class Application
 				dest: @options.views.static_path,
 				compress: true
 			}),
+			@compiler.middleware(),
 			connect.static(@options.views.static_path),
 			quip(),
-			@router.route()
+			@text_viewer.middleware(),
+			@router.middleware()
 			#on_request,
 			#,
 			#(req, res, next) =>

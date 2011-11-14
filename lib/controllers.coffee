@@ -9,7 +9,7 @@ class Router
 		@urls = @compile_keys @flatten_keys urls
 		Router.instance = this
 	
-	route: () ->
+	middleware: () ->
 		return (req, res, next) =>
 			is_ok = @urls.some (x) ->
 		        match = x[0].exec url.parse(req.url).pathname
