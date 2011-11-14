@@ -1,2 +1,20 @@
-body a{font:12px/1.4 "Lucida Grande",Arial,sans-serif;background:#000;color:#ccc;-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px}
-form input{padding:5px;border:1px solid;-webkit-border-radius:.6px;-moz-border-radius:.6px;border-radius:.6px}
+border-radius() {
+  -webkit-border-radius: arguments
+  -moz-border-radius: arguments
+  border-radius: arguments
+}
+
+body a {
+  font: 12px/1.4 "Lucida Grande", Arial, sans-serif;
+  background: black;
+  color: #ccc;
+  border-radius: 10px;
+}
+
+form input {
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 0.6px;
+}
+/*lala*/
+

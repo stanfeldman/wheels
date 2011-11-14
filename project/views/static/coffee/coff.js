@@ -1,1 +1,0 @@
-((function(){var a;a=8,alert("hello from coffee, "+a)})).call(this)

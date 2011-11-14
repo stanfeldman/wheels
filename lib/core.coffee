@@ -52,12 +52,6 @@ class Application
 			#(req, res, next) =>
 			#	@eventer.emit "before_action", req, res
 			#	next()
-			stylus.middleware({
-				src: @options.views.static_path,
-				dest: @options.views.static_path,
-				compress: true
-			}),
-			@compiler.middleware(),
 			connect.static(@options.views.static_path),
 			quip(),
 			@text_viewer.middleware(),

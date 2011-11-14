@@ -2,6 +2,7 @@ core = require "./core"
 dust = require 'dust.js'
 path = require 'path'
 mime = require 'mime'
+mime.define { 'application/coffeescript': ['coffee'] }
 fs = require "fs"
 findit = require 'findit'
 uglify = require "uglify-js"
@@ -9,6 +10,7 @@ coffeescript = require "coffee-script"
 mime = require "mime"
 zlib = require "zlib"
 url = require "url"
+stylus = require "stylus"
 
 class TextViewer
 	@instance: undefined
@@ -17,15 +19,40 @@ class TextViewer
 		if TextViewer.instance isnt undefined
 			return TextViewer.instance
 		@template_path = options.template_path
+		@static_path = options.static_path
 		unless @template_path.length > 0
 			return
-		finder = findit.find path.normalize @template_path
+		finder = findit.find @template_path
 		finder.on 'file', (file) =>
 			filepath = path.normalize file
 			if (mime.lookup filepath) is "text/html"
 				data = fs.readFileSync filepath, 'utf-8'
 				compiled = dust.compile data, path.basename filepath
 				dust.loadSource compiled
+		unless @static_path.length > 0
+			return
+		compiler = new Compiler(@static_path)
+		finder = findit.find @static_path
+		finder.on 'file', (file) ->
+			filepath = path.normalize file
+			fs.readFile filepath, 'utf-8', (err, data) ->
+				mimetype = mime.lookup filepath
+				switch mimetype
+					when "text/css"
+						new_css = filepath[0..filepath.length-5] + ".c.css"
+						if not path.existsSync new_css
+							compiler.compile_css data, (err, res) ->
+								fs.writeFile new_css, res, 'utf-8'
+					when "application/javascript"
+						new_js = filepath[0..filepath.length-4] + ".c.js"
+						if not path.existsSync new_js
+							compiler.compile_js data, (err, res) ->
+								fs.writeFile new_js, res, 'utf-8'
+					when "application/coffeescript"
+						new_cf = filepath[0..filepath.length-8] + ".c.js"
+						if not path.existsSync new_cf
+							compiler.compile_coffee data, (err, res) ->
+								fs.writeFile new_cf, res, 'utf-8'
 		TextViewer.instance = this
 		
 	middleware: () ->
@@ -45,33 +72,10 @@ class Compiler
 			return Compiler.instance
 		@static_path = options.static_path
 		Compiler.instance = this
-		
-	middleware: () ->
-		return (req, res, next) =>
-			if 'GET' isnt req.method
-				return next()
-			p = url.parse(req.url).pathname
-			console.log p
-			if /\.js$/.test(p)
-				comp_path = path.join @static_path, p
-				orig_path = path.join @static_path, p.replace '.js', '.coffee'
-				fs.stat orig_path, (err, orig_path_stats) =>
-					fs.stat comp_path, (e, comp_path_stats) =>
-						if e
-							if 'ENOENT' == e.code
-								@compile(orig_path, comp_path, next)
-							else
-							  next e
-						else
-							if orig_path_stats?.mtime > comp_path_stats?.mtime
-								@compile(orig_path, comp_path, next)
-							else next()
-			else next()
-							
-	compile: (from, to, next) ->
-		fs.readFile from, 'utf8', (err, str) =>
-			@compile_coffee str, (e, res) ->
-				fs.writeFile to, res, 'utf8', next
+				
+	compile_css: (str, callback) ->
+		stylus.render str, {compress: true}, (err, res) ->
+			callback err, res
 			
 	compile_js: (js, callback) ->
 		ast = uglify.parser.parse js
