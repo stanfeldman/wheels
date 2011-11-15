@@ -1,5 +1,13 @@
 core = require "./core"
-dust = require 'dust.js'
+swig = require 'swig'
+html_minifier = require "html-minifier"
+min_options =
+	removeComments: true
+	collapseBooleanAttributes: true
+	removeCDATASectionsFromCDATA: true
+	collapseWhitespace: true
+	removeAttributeQuotes: true
+	removeEmptyAttributes: true
 path = require 'path'
 mime = require 'mime'
 mime.define { 'application/coffeescript': ['coffee'] }
@@ -22,15 +30,9 @@ class TextViewer
 		@static_path = options.static_path
 		unless @template_path.length > 0
 			return
-		finder = findit.find @template_path
-		finder.on 'file', (file) =>
-			filepath = path.normalize file
-			if (mime.lookup filepath) is "text/html"
-				data = fs.readFileSync filepath, 'utf-8'
-				compiled = dust.compile data, path.basename filepath
-				dust.loadSource compiled
 		unless @static_path.length > 0
 			return
+		swig.init {root: @template_path}
 		compiler = new Compiler(@static_path)
 		finder = findit.find @static_path
 		finder.on 'file', (file) ->
@@ -58,10 +60,11 @@ class TextViewer
 	middleware: () ->
 		return (req, res, next) =>
 			res.render = (template, context) ->
-				dust.render template, context, (err, out) ->
-					zlib.gzip out, (e, o) ->
-						res.writeHead 200, {'Content-Type': 'text/html', "Content-Encoding": "gzip"}
-						res.end o
+				tmpl = swig.compileFile template
+				out = html_minifier.minify (tmpl.render context), min_options
+				zlib.gzip out, (e, o) ->
+					res.writeHead 200, {'Content-Type': 'text/html', "Content-Encoding": "gzip"}
+					res.end o
 			next()
 
 class Compiler

@@ -1,10 +1,21 @@
-{>"base.html"/}
-{<content}
-	{! some comment !}
-	<h2>name: {name}</h2>
-	<h3>{foo}</h3>
-	{#numbers}
-		<div>{.}</div>
-	{/numbers}
-{/content}
+{% extends 'views/templates/base.html' %}
 
+{% block title %}My Page{% endblock %}
+
+{% block head %}
+    {% parent %}
+    <script src="/js/j.c.js"></script>
+{% endblock %}
+
+{% block content %}
+<!--lala-->
+<h1>{{ pagename|title }}</h1>
+<p>This is just an awesome page.</p>
+<ul>
+{% for author in authors %}
+    <li{% if forloop.index <= 0 %} class="first"{% endif %}>{{ author }}</li>
+{% empty %}
+    <li>There are no authors.</li>
+{% endfor %}
+</ul>
+{% endblock %}
