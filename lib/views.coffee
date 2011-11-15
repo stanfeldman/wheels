@@ -42,17 +42,20 @@ class TextViewer
 				switch mimetype
 					when "text/css"
 						new_css = filepath[0..filepath.length-5] + ".c.css"
-						if not path.existsSync new_css
+						bname = path.basename filepath, ".css"
+						if bname[bname.length-2..bname.length] isnt ".c"
 							compiler.compile_css data, (err, res) ->
 								fs.writeFile new_css, res, 'utf-8'
 					when "application/javascript"
 						new_js = filepath[0..filepath.length-4] + ".c.js"
-						if not path.existsSync new_js
+						bname = path.basename filepath, ".js"
+						if bname[bname.length-2..bname.length] isnt ".c"
 							compiler.compile_js data, (err, res) ->
 								fs.writeFile new_js, res, 'utf-8'
 					when "application/coffeescript"
 						new_cf = filepath[0..filepath.length-8] + ".c.js"
-						if not path.existsSync new_cf
+						bname = path.basename filepath, ".js"
+						if bname[bname.length-2..bname.length] isnt ".c"
 							compiler.compile_coffee data, (err, res) ->
 								fs.writeFile new_cf, res, 'utf-8'
 		TextViewer.instance = this

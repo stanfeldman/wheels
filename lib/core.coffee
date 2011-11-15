@@ -53,6 +53,7 @@ class Application
 			#	@eventer.emit "before_action", req, res
 			#	next()
 			connect.static(@options.views.static_path),
+			connect.staticCache(),
 			quip(),
 			@text_viewer.middleware(),
 			@router.middleware()
