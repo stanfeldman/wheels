@@ -57,6 +57,6 @@ class MyController
 exports.MyController = MyController
 	</pre>
 * view.html
-	Kiss.js uses dust templates. See project folder.
+	Kiss.js uses Django-like templates from swig. See project folder.
 	Client-side coffee scripts will be compile on the fly.
 	For styling use Stylus, it also compiles on the fly.

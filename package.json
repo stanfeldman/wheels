@@ -9,7 +9,6 @@
   {
   	"coffee-script": "latest",
   	"vows": "latest",
-    "mootools.js": "latest",
     "swig": "latest",
     "html-minifier": "latest",
     "mime": "latest",
@@ -20,7 +19,8 @@
     "socket.io": "latest",
     "connect": "latest",
     "stylus": "latest",
-    "quip": "latest"
+    "quip": "latest",
+    "eventemitter2": "latest"
   },
   "main": "index",
   "bin": 

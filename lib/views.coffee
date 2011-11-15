@@ -19,6 +19,7 @@ mime = require "mime"
 zlib = require "zlib"
 url = require "url"
 stylus = require "stylus"
+connect = require "connect"
 
 class TextViewer
 	@instance: undefined
@@ -95,10 +96,23 @@ class Compiler
 			callback err, js
 
 class FileViewer
-	constructor: (file_path) ->
-		@file = file_path
-		@mimetype = mime.lookup this.file
-		@filename = path.basename this.file
+	constructor: (options) ->
+		@static_path = options.static_path
+	
+	middleware: () ->
+		return (req, res, next) =>
+			res.send = (filepath, options) =>
+				res.setHeader 'Content-disposition', 'attachment; filename=' + options.filename
+				#res.setHeader 'Content-type', @mimetype
+				filestream = fs.createReadStream filepath
+				filestream.on 'data', (chunk) =>
+					res.write chunk
+				filestream.on 'end', ->
+					res.end()
+					if options.delete_after
+						fs.unlink filepath
+					return true
+			next()
 	
 	render: (req, res, options) ->
 		res.setHeader 'Content-disposition', 'attachment; filename=' + options.filename
