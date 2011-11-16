@@ -1,19 +1,17 @@
 kiss = require "kiss.js"
 path = require 'path'
 fs = require "fs"
-Pdf = require "pdfkit"
+Pdf = require "pdf.js"
 uuid = require 'node-uuid'
 
 class MyController
-	#Pdf file example
 	get: (req, res) ->
-		pdf = new Pdf()
+		app = new kiss.core.Application()
+		pdf = new pdf()
 		filename = uuid() + ".pdf"
-		filepath = path.join __dirname, filename
+		filepath = path.join app.options.views.static_path, filename
 		pdf.text "hello, world!\nlalala345"
 		pdf.write filepath, ->
-			v = new kiss.views.FileView(filepath)
-			v.render req, res, {filename: "out.pdf"}
-			fs.unlink(filepath)
+			res.send filepath, {filename: "out.pdf", delete_after: true}
 
 exports.MyController = MyController
