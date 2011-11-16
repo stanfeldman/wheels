@@ -1,7 +1,7 @@
 kiss = require "kiss.js"
 path = require 'path'
 fs = require "fs"
-Pdf = require "pdf.js"
+pdf = require "pdf.js"
 uuid = require 'node-uuid'
 
 class MyController
