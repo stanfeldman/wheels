@@ -1,12 +1,9 @@
 http = require 'http'
-#socketio = require "socket.io"
-controllers = require "./controllers"
-views = require "./views"
-events = require "events"
+controllers = require "../controllers"
+views = require "../views"
 connect = require "connect"
 path = require "path"
 stylus = require 'stylus'
-quip = require 'quip'
 eventemitter2 = require("eventemitter2")
 
 class Application
@@ -23,23 +20,21 @@ class Application
 		@eventer = new eventemitter2.EventEmitter2({wildcard: true})
 		for ev, listn of @options.events
 			@eventer.on ev, listn
-		@router = new controllers.Router(@options.urls)
-		@text_viewer = new views.TextViewer(@options.views)
-		@file_viewer = new views.FileViewer(@options.views)
-		@compiler = new views.Compiler(@options.views)
-		@translator = new views.Translator(@options.views)
+		@router = new controllers.router.Router(@options.urls)
+		@templater = new views.templater.Templater(@options.views)
+		@filer = new views.filer.Filer(@options.views)
+		@compiler = new views.compiler.Compiler(@options.views)
+		@translator = new views.translator.Translator(@options.views)
 		@server = connect(
 			connect.cookieParser(),
 			connect.session({ secret: @options.views.cookie_secret }),
 			connect.static(@options.views.static_path),
 			connect.staticCache(),
-			quip(),
-			@text_viewer.middleware(),
-			@file_viewer.middleware(),
+			views.res(),
+			@templater.middleware(),
+			@filer.middleware(),
 			@router.middleware()
 		)
-		#@server = @middleware
-		#@socketio = socketio.listen @server, {"log level" : 0}
 		@server.listen @options.application.port, @options.application.address
 		@started = true
 		@eventer.emit "application.started", this

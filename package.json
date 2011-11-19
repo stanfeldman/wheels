@@ -16,10 +16,8 @@
     "uglify-js": "latest",
     "commander": "latest",
     "wrench": "latest",
-    "socket.io": "latest",
     "connect": "latest",
     "stylus": "latest",
-    "quip": "latest",
     "eventemitter2": "latest"
   },
   "main": "index",

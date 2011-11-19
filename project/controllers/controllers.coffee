@@ -1,5 +1,3 @@
-kiss = require "kiss.js"
-
 class MyController
 	get: (req, res) ->
 		#translator = new kiss.views.Translator()
@@ -11,7 +9,7 @@ class MyController
 			foo: req.session.views
 			pagename: 'awesome people'
 			authors: ['Paul', 'Jim', 'Jane']
-		res.render "views/templates/view.html", context
+		res.template "views/templates/view.html", context
 		
 	post: (req, res) ->
 		res.text "hello from post"

@@ -1,4 +1,4 @@
-kiss = require "kiss.js"
+kiss = require "../../../kiss.js"
 controllers = require "../controllers/controllers"
 
 args = process.argv.splice 2
@@ -20,8 +20,9 @@ options =
 		locale_path: __dirname + "/../views/locales/"
 		cookie_secret: "ertyu78f020fk"
 	urls:
-		"/c": my_controller
+		"/": my_controller
 		"/user":
 			"/posts": my_controller
-app = new kiss.core.Application(options)
+
+app = new kiss.core.application.Application(options)
 app.start()
