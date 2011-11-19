@@ -21,5 +21,5 @@ options =
 		cookie_secret: "ertyu78f020fk"
 	urls:
 		"/": my_controller
-app = new kiss.core.Application(options)
+app = new kiss.core.application.Application(options)
 app.start()

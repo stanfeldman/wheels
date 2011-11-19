@@ -4,7 +4,7 @@ class Filer
 	constructor: (options) ->
 		@static_path = options.static_path
 	
-	middleware: () ->
+	middleware: ->
 		return (req, res, next) =>
 			res.file = (filepath, options) =>
 				res.setHeader 'Content-disposition', 'attachment; filename=' + options.filename

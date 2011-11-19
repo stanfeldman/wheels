@@ -12,7 +12,6 @@ mime = require 'mime'
 mime.define { 'application/coffeescript': ['coffee'] }
 fs = require "fs"
 findit = require 'findit'
-zlib = require "zlib"
 url = require "url"
 compiler = require "./compiler"
 
@@ -56,14 +55,12 @@ class Templater
 								fs.writeFile new_cf, res, 'utf-8'
 		Templater.instance = this
 		
-	middleware: () ->
+	middleware: ->
 		return (req, res, next) =>
 			res.template = (template, context) ->
 				tmpl = swig.compileFile template
 				out = html_minifier.minify (tmpl.render context), min_options
-				zlib.gzip out, (e, o) ->
-					res.writeHead 200, {'Content-Type': 'text/html', "Content-Encoding": "gzip"}
-					res.end o
+				res.html out
 			next()
 
 exports.Templater = Templater

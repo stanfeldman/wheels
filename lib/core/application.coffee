@@ -21,6 +21,7 @@ class Application
 		for ev, listn of @options.events
 			@eventer.on ev, listn
 		@router = new controllers.router.Router(@options.urls)
+		@responser = new views.responser.Responser()
 		@templater = new views.templater.Templater(@options.views)
 		@filer = new views.filer.Filer(@options.views)
 		@compiler = new views.compiler.Compiler(@options.views)
@@ -30,7 +31,7 @@ class Application
 			connect.session({ secret: @options.views.cookie_secret }),
 			connect.static(@options.views.static_path),
 			connect.staticCache(),
-			views.res(),
+			@responser.middleware(),
 			@templater.middleware(),
 			@filer.middleware(),
 			@router.middleware()
