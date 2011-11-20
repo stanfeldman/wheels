@@ -27,32 +27,7 @@ class Templater
 			return
 		unless @static_path.length > 0
 			return
-		swig.init {root: @template_path}
-		compiler = new compiler.Compiler(@static_path)
-		finder = findit.find @static_path
-		finder.on 'file', (file) ->
-			filepath = path.normalize file
-			fs.readFile filepath, 'utf-8', (err, data) ->
-				mimetype = mime.lookup filepath
-				switch mimetype
-					when "text/css"
-						new_css = filepath[0..filepath.length-5] + ".c.css"
-						bname = path.basename filepath, ".css"
-						if bname[bname.length-2..bname.length] isnt ".c"
-							compiler.compile_css data, (err, res) ->
-								fs.writeFile new_css, res, 'utf-8'
-					when "application/javascript"
-						new_js = filepath[0..filepath.length-4] + ".c.js"
-						bname = path.basename filepath, ".js"
-						if bname[bname.length-2..bname.length] isnt ".c"
-							compiler.compile_js data, (err, res) ->
-								fs.writeFile new_js, res, 'utf-8'
-					when "application/coffeescript"
-						new_cf = filepath[0..filepath.length-8] + ".c.js"
-						bname = path.basename filepath, ".js"
-						if bname[bname.length-2..bname.length] isnt ".c"
-							compiler.compile_coffee data, (err, res) ->
-								fs.writeFile new_cf, res, 'utf-8'
+		swig.init {root: @template_path}		
 		Templater.instance = this
 		
 	middleware: ->
