@@ -1,19 +1,20 @@
 # Web framework for node.js in CoffeeScript. Simple and sexy.
 
-Object-oriented web framework on Node.js, written in CoffeeScript.
+	Object-oriented web framework on Node.js, written in CoffeeScript.
 
 # Installation
 
-* Get npm (http://npmjs.org)
-* run <pre>npm install kiss.js</pre>
-* (optionaly) If you want write project in CoffeeScript <pre>npm install coffee-script</pre>
-* Done
+	* Get npm (http://npmjs.org)
+	* run <pre>npm install kiss.js</pre>
+	* (optionaly) If you want write project in CoffeeScript <pre>npm install coffee-script</pre>
+	* Done
 
 # Usage
 
-* Create project(it is just good files structure, you can configure it via application options) <pre>kiss new path/to/new/project</pre>
-* core/app.coffee
-	<pre>
+	Create project(it is just good files structure, you can configure it via application options) <pre>kiss new path/to/new/project</pre>
+	
+# core/app.coffee
+
 	kiss = require "kiss.js"
 	controllers = require "../controllers/controllers"
 	args = process.argv.splice 2
@@ -39,24 +40,28 @@ Object-oriented web framework on Node.js, written in CoffeeScript.
 				"/posts": my_controller
 	app = new kiss.core.application.Application(options)
 	app.start()
-	</pre>
-* controllers.js
-	<pre>
-kiss = require "kiss.js"
-class MyController
-	get: (req, res) ->
-		req.session.views ?= 0
-		req.session.views++
-		context = { foo: req.session.views, names: ["Stas", "Boris"], numbers: [], name: -> "Bob " + "Marley"  }
-		for i in [0..10]
-			context.numbers.push "bla bla " + i
-		res.template "view.html", context
+
+# controllers.js
+
+	kiss = require "kiss.js"
+	class MyController
+		get: (req, res) ->
+			req.session.views ?= 0
+			req.session.views++
+			context = { foo: req.session.views, names: ["Stas", "Boris"], numbers: [], name: -> "Bob " + "Marley"  }
+			for i in [0..10]
+				context.numbers.push "bla bla " + i
+			res.template "view.html", context
 		
-	post: (req, res) ->
-		res.text "hello from post"
-exports.MyController = MyController
-	</pre>
-* view.html
+		post: (req, res) ->
+			res.text "hello from post"
+	exports.MyController = MyController
+
+# view.html
 	Kiss.js uses Django-like templates from swig. See project folder.
 	Client-side coffee scripts will be compile on the start.
 	For styling use Stylus, it also compiles on the start.
+	
+# License
+
+	This software is licensed under the BSD License. See the license file in the top distribution directory for the full license text.
