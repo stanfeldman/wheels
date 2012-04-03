@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Kiss.js by stanislavfeldman</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/stanislavfeldman/kiss.js">Fork Me on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Kiss.js</h1>
+            <h2>Web framework for node.js. Simple and sexy.</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/stanislavfeldman/kiss.js/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/stanislavfeldman/kiss.js/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+      <span class="banner-fix"></span>
+
+      <section id="main_content">
+        <h3>Web framework for node.js in CoffeeScript. Simple and sexy.</h3>
+
+<p>Object-oriented web framework on Node.js, written in CoffeeScript.</p>
+
+<h2>Installation</h2>
+
+<ul>
+<li>Get npm (<a href="http://npmjs.org">http://npmjs.org</a>)</li>
+<li>run <pre>npm install kiss.js</pre>
+</li>
+<li>(optionaly) If you want write project in CoffeeScript <pre>npm install coffee-script</pre>
+</li>
+<li>Done</li>
+</ul><h2>Usage</h2>
+
+<p>Create project(it is just good files structure, you can configure it via application options)</p>
+
+<pre><code>kiss new path/to/new/project
+</code></pre>
+
+<h2>core/app.coffee</h2>
+
+<pre><code>kiss = require "kiss.js"
+controllers = require "../controllers/controllers"
+args = process.argv.splice 2
+address = "127.0.0.1"
+port = 1337
+if args[0]
+    address = args[0]
+if args[1]
+    port = parseInt args[1] 
+my_controller = new controllers.MyController()
+options =
+    application:
+        address: address || "127.0.0.1"
+        port: port || 1337
+    views:
+        static_path: __dirname + "/../views/static/"
+        template_path: __dirname + "/../"
+        locale_path: __dirname + "/../views/locales/"
+        cookie_secret: "ertyu78f020fk"
+    urls:
+        "/": my_controller
+        "/user":
+            "/posts": my_controller
+app = new kiss.core.application.Application(options)
+app.start()
+</code></pre>
+
+<h2>controllers.js</h2>
+
+<pre><code>kiss = require "kiss.js"
+class MyController
+    get: (req, res) -&gt;
+        req.session.views ?= 0
+        req.session.views++
+        context = { foo: req.session.views, names: ["Stas", "Boris"], numbers: [], name: -&gt; "Bob " + "Marley"  }
+        for i in [0..10]
+            context.numbers.push "bla bla " + i
+        res.template "view.html", context
+
+    post: (req, res) -&gt;
+        res.text "hello from post"
+exports.MyController = MyController
+</code></pre>
+
+<h2>view.html</h2>
+
+<p>Kiss.js uses Django-like templates from swig. See project folder.
+Client-side coffee scripts will be compile on the start.
+For styling use Stylus, it also compiles on the start.</p>
+
+<h2>License</h2>
+
+<p>This software is licensed under the BSD License. See the license file in the top distribution directory for the full license text.</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/stanislavfeldman">stanislavfeldman</a> can be found on <a href="https://github.com/stanislavfeldman/kiss.js">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
