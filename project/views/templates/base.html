@@ -3,29 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <title>{% block title %}kiss.js example{% endblock %}</title>
-
     {% block head %}
     <link rel="stylesheet" href="/styles/style.c.css" />
     <script data-main="scripts/j.c.js" src="scripts/require.c.js"></script>
     {% endblock %}
 </head>
 <body>
-
     <header>
         <h1>{% block title %}{% endblock %}</h1>
     </header>
-
     <section>
     {% block content %}{% endblock %}
-
         <section>
             {% block sidebar %}
             <h2>Sidebar</h2>
-
             <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
             {% endblock %}
         </section>
     </section>
-
 </body>
 </html>
