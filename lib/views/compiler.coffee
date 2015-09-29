@@ -14,7 +14,7 @@ class Compiler
 		if Compiler.instance isnt undefined
 			return Compiler.instance
 		@static_path = options.static_path
-		finder = findit.find @static_path
+		finder = findit @static_path
 		finder.on 'file', (file) =>
 			filepath = path.normalize file
 			fs.readFile filepath, 'utf-8', (err, data) =>

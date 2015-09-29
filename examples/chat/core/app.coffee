@@ -17,5 +17,5 @@ options =
 	events:
 		"application_started": my_controller
 		"/$": my_controller
-app = new kiss.core.Application(options)
+app = new kiss.core.application.Application(options)
 app.start()

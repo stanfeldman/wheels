@@ -7,7 +7,7 @@ class Translator
 	constructor: (options) ->
 		if Translator.instance isnt undefined
 			return Translator.instance
-		unless path.existsSync options.locale_path
+		unless not fs.lstatSync(options.locale_path)?.isDirectory()
 			return
 		@translations = {}
 		@files = fs.readdirSync path.normalize options.locale_path

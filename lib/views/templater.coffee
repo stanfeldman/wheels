@@ -1,5 +1,5 @@
 swig = require 'swig'
-html_minifier = require "html-minifier"
+htmlMinifier = require "html-minifier"
 min_options =
 	removeComments: true
 	collapseBooleanAttributes: true
@@ -7,12 +7,6 @@ min_options =
 	collapseWhitespace: true
 	removeAttributeQuotes: true
 	removeEmptyAttributes: true
-path = require 'path'
-mime = require 'mime'
-mime.define { 'application/coffeescript': ['coffee'] }
-fs = require "fs"
-findit = require 'findit'
-url = require "url"
 compiler = require "./compiler"
 
 class Templater
@@ -27,14 +21,14 @@ class Templater
 			return
 		unless @static_path.length > 0
 			return
-		swig.init {root: @template_path}		
+		swig.setDefaults {root: @template_path}		
 		Templater.instance = this
 		
 	middleware: ->
 		return (req, res, next) =>
 			res.template = (template, context) ->
 				tmpl = swig.compileFile template
-				out = html_minifier.minify (tmpl.render context), min_options
+				out = htmlMinifier.minify (tmpl context), min_options
 				res.html out
 			next()
 
