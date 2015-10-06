@@ -55,4 +55,4 @@ class Compiler
 		@compile_js cf, (err, js) ->
 			callback null, js
 
-exports.Compiler = Compiler
+module.exports = Compiler

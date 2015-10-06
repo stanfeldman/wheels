@@ -9,6 +9,7 @@ cookieParser = require 'cookie-parser'
 session = require "cookie-session"
 serveStatic = require "serve-static"
 
+
 class Application
 	@instance: undefined
 
@@ -23,12 +24,12 @@ class Application
 		@eventer = new eventemitter2.EventEmitter2({wildcard: true})
 		for ev, listn of @options.events
 			@eventer.on ev, listn
-		@router = new controllers.router.Router(@options.urls)
-		@responser = new views.responser.Responser()
-		@templater = new views.templater.Templater(@options.views)
-		@filer = new views.filer.Filer(@options.views)
-		@compiler = new views.compiler.Compiler(@options.views)
-		@translator = new views.translator.Translator(@options.views)
+		@router = new controllers.Router(@options.urls)
+		@responser = new views.Responser()
+		@templater = new views.Templater(@options.views)
+		@filer = new views.Filer(@options.views)
+		@compiler = new views.Compiler(@options.views)
+		@translator = new views.Translator(@options.views)
 		@server = connect()
 		@server.use cookieParser()
 		@server.use session({ secret: @options.views.cookie_secret })
@@ -47,4 +48,4 @@ class Application
 			return
 		@server.close()
 
-exports.Application = Application
+module.exports = Application

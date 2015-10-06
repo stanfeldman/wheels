@@ -9,6 +9,7 @@ min_options =
 	removeEmptyAttributes: true
 compiler = require "./compiler"
 
+
 class Templater
 	@instance: undefined
 	
@@ -32,4 +33,4 @@ class Templater
 				res.html out
 			next()
 
-exports.Templater = Templater
+module.exports = Templater

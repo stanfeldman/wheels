@@ -1,5 +1,5 @@
-kiss = require "../../../kiss.js"
+wheels = require "../../../wheels"
 settings = require "./settings"
 
-app = new kiss.core.application.Application(settings.options)
+app = new wheels.core.Application(settings.options)
 app.start()

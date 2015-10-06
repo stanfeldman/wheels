@@ -1,5 +1,6 @@
 url = require "url"
 
+
 class Router
 	@instance: undefined
 	
@@ -53,5 +54,5 @@ class Router
 			method: method
 		return res
 		
-exports.Router = Router
+module.exports = Router
 

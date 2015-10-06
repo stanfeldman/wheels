@@ -91,5 +91,5 @@ class Responser
 		    	res.end()
 		    return null
 
-exports.Responser = Responser
+module.exports = Responser
 

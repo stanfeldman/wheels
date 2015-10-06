@@ -27,4 +27,4 @@ class Filer
 		filestream.on 'end', ->
 			res.end()
 			
-exports.Filer = Filer
+module.exports = Filer

@@ -1,11 +1,11 @@
 # Web framework for node.js in CoffeeScript. Simple and sexy.
 
-	Object-oriented web framework on Node.js, written in CoffeeScript.
+	Wheels - object-oriented web framework on Node.js, written in CoffeeScript.
 
 # Installation
 
 	* Get npm (http://npmjs.org)
-	* run <pre>npm install kiss.js</pre>
+	* run npm install wheels
 	* (optionaly) If you want write project in CoffeeScript <pre>npm install coffee-script</pre>
 	* Done
 

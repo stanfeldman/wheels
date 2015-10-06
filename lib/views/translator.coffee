@@ -59,4 +59,4 @@ class Translator
 		            request.region = regions[0]
 		    return request.language
 
-exports.Translator = Translator
+module.exports = Translator
