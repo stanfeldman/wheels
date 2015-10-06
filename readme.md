@@ -11,11 +11,11 @@
 
 # Usage
 
-	Create project(it is just good files structure, you can configure it via application options) <pre>kiss new path/to/new/project</pre>
+	Create project(it is just good files structure, you can configure it via application options) <pre>wheels new path/to/new/project</pre>
 	
 # core/app.coffee
 
-	kiss = require "kiss.js"
+	wheels = require "wheels"
 	controllers = require "../controllers/controllers"
 	args = process.argv.splice 2
 	address = "127.0.0.1"
@@ -38,12 +38,12 @@
 			"/": my_controller
 			"/user":
 				"/posts": my_controller
-	app = new kiss.core.application.Application(options)
+	app = new wheels.core.Application(options)
 	app.start()
 
 # controllers.js
 
-	kiss = require "kiss.js"
+	wheels = require "wheels"
 	class MyController
 		get: (req, res) ->
 			req.session.views ?= 0
@@ -58,9 +58,9 @@
 	exports.MyController = MyController
 
 # view.html
-	Kiss.js uses Django-like templates from swig. See project folder.
-	Client-side coffee scripts will be compile on the start.
-	For styling use Stylus, it also compiles on the start.
+	wheels uses Django-like templates from swig. See project folder.
+	Client-side coffee scripts will be compiled on the start.
+	For styling use Stylus, it is also compiled on the start.
 	
 # License
 
